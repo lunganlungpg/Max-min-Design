@@ -1,8 +1,20 @@
 # ==============================================================================
 # Max-Min Experimental Designs for Comparing Pairs of Treatments with Binary Outcomes
-# Reference: Singh, S. P., and Davidov, O. (2026), JSPI, 243, 106379
-# Author: Lunganlung P G, Ph.D. Scholar (Agricultural Statistics), Roll No: 13173
-# ICAR - Indian Agricultural Statistics Research Institute (ICAR-IASRI), New Delhi
+#
+# FOUNDATIONAL THEORETICAL PAPER:
+# Singh, Satya Prakash (ICAR-IASRI) and Davidov, Ori (University of Haifa) (2026).
+# "Max–min experimental designs for comparing pairs of treatments with binary outcomes"
+# Journal of Statistical Planning and Inference, Volume 243, Article 106379.
+# DOI: 10.1016/j.jspi.2025.106379
+#
+# RESEARCH INNOVATIONS, METHODOLOGY EXTENSIONS & SOFTWARE IMPLEMENTATION:
+# Lunganlung P G, Ph.D. Scholar (Agricultural Statistics), Roll No: 13173
+# ICAR - Indian Agricultural Statistics Research Institute (ICAR-IASRI), New Delhi 110012
+# - Innovation 1: Agricultural Seedling-Emergence 5-treatment experimental design & data framework
+# - Innovation 2: Discrete integer allocation via Hamilton-Hare largest-remainder rounding
+# - Innovation 3: Dynamic graph topology matrix solver & automated bipartiteness/connectivity detection
+# - Innovation 4: 2D multi-parametric power sensitivity & robustness analysis engine
+# - Innovation 5: Field plot & laboratory nursery tray randomization generator (Fisher-Yates)
 # ==============================================================================
 
 # Function: Largest-Remainder Rounding (Hamilton-Hare method)

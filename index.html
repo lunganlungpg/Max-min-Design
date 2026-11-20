@@ -298,7 +298,7 @@ canvas { display: block; width: 100%; }
       <div class="logo-icon">M</div>
       <div class="app-title">
         <h1>MaxMin Design</h1>
-        <p>Binary Treatment Comparisons (IASRI)</p>
+        <p>Theory: Singh & Davidov (2026) • Innovations: Lunganlung P G</p>
       </div>
     </div>
     <div class="badge-iasri">ICAR-IASRI</div>
@@ -777,7 +777,15 @@ canvas { display: block; width: 100%; }
       </div>
 
       <div class="paper-quote">
-        "Singh and Davidov (2026) study how a fixed number of experimental units should be allocated among treatment groups when the response is binary and only specified pairs of treatments are to be compared."
+        <div style="font-weight: 700; color: #fff; margin-bottom: 4px;">Foundational Research Reference:</div>
+        <strong>Singh, Satya Prakash</strong><sup>a</sup> and <strong>Davidov, Ori</strong><sup>b</sup> (2026).<br/>
+        <em>"Max–min experimental designs for comparing pairs of treatments with binary outcomes"</em>.<br/>
+        <strong>Journal of Statistical Planning and Inference</strong>, 243, 106379.<br/>
+        <span style="font-size: 10px; color: var(--text-muted);">
+          <sup>a</sup>ICAR-Indian Agricultural Statistics Research Institute, New Delhi 110012, India<br/>
+          <sup>b</sup>Department of Statistics, University of Haifa, Haifa 3498838, Israel
+        </span><br/>
+        <a href="https://doi.org/10.1016/j.jspi.2025.106379" target="_blank" style="color: var(--primary-light); font-size: 11px; text-decoration: underline;">https://doi.org/10.1016/j.jspi.2025.106379</a>
       </div>
 
       <h4 style="color: #fff; margin: 12px 0 6px;">1. Comparison Graphs</h4>
@@ -864,6 +872,112 @@ canvas { display: block; width: 100%; }
       </div>
     </div>
 
+    <!-- Foundational Reference Card -->
+    <div class="card" style="border-left: 4px solid var(--accent-gold);">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">📚</span> Foundational Research Reference</div>
+        <span class="tag tag-control">Core Theory</span>
+      </div>
+      <p style="font-size: 13px; color: #fff; line-height: 1.6; font-weight: 700;">
+        Singh, Satya Prakash<sup>a</sup>, and Davidov, Ori<sup>b</sup> (2026).
+      </p>
+      <p style="font-size: 13px; color: var(--primary-light); font-style: italic; margin-bottom: 6px;">
+        "Max–min experimental designs for comparing pairs of treatments with binary outcomes."
+      </p>
+      <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5; margin-bottom: 8px;">
+        <strong>Journal of Statistical Planning and Inference</strong>, Volume 243, Article 106379.<br/>
+        DOI: <a href="https://doi.org/10.1016/j.jspi.2025.106379" target="_blank" style="color: var(--accent-blue); text-decoration: underline;">10.1016/j.jspi.2025.106379</a>
+      </p>
+      <div style="background: rgba(0,0,0,0.25); border-radius: 8px; padding: 10px; font-size: 11px; color: #94a3b8; line-height: 1.5;">
+        <strong>Author Affiliations:</strong><br/>
+        <sup>a</sup> <em>ICAR - Indian Agricultural Statistics Research Institute, Library Avenue, Pusa, New Delhi 110012, India</em><br/>
+        <sup>b</sup> <em>Department of Statistics, University of Haifa, Haifa 3498838, Israel</em>
+      </div>
+      <div style="margin-top: 8px; font-size: 11px; color: #cbd5e1; line-height: 1.5;">
+        <strong>Core Theoretical Foundations Established:</strong>
+        <ul style="margin-left: 18px; margin-top: 4px;">
+          <li>Graph-based formulation for pairwise comparisons $G = (V, P)$ and Wald test invariance.</li>
+          <li>Exact analytical Non-Centrality Parameter formula (Equation 9) under binary response.</li>
+          <li>Theorem 3.3 proving max-min degree allocation $\xi_i = d_i / (2|P|)$ for bipartite comparison graphs.</li>
+          <li>Characterization of Least Favourable Configurations (LFC) constrained by Bernoulli variance $\theta(1-\theta)$.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Ph.D. Research Innovations & Methodological Extensions -->
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">💡</span> Ph.D. Research Innovations by Lunganlung P G</div>
+        <span class="tag tag-mm">Novel Contributions</span>
+      </div>
+      <p style="font-size: 12px; color: #cbd5e1; margin-bottom: 12px; line-height: 1.5;">
+        As part of doctoral research at ICAR-IASRI, the following computational, methodological, and applied innovations were engineered by <strong>Lunganlung P G</strong> to translate Singh & Davidov's (2026) theoretical max-min framework into real-world agricultural and experimental practice:
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Innovation 1 -->
+        <div style="background: #081a13; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <div style="font-size: 12px; font-weight: 700; color: #34d399; margin-bottom: 3px;">
+            1. Agricultural Seed-Emergence Experimental Translation
+          </div>
+          <p style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">
+            Formulated the 5-treatment agronomic trial (untreated control, hydro-priming, bio-priming, fungicide dressing, and integrated seed treatment, $N=480$ seeds) with day-10 emergence binary endpoints. Proved that Graph (b) degree concentration on Untreated Control and Bio-priming delivers a <strong>30.88% seed savings</strong> (reducing required seeds from 693 to 479 for 90% power).
+          </p>
+        </div>
+
+        <!-- Innovation 2 -->
+        <div style="background: #081a13; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <div style="font-size: 12px; font-weight: 700; color: #34d399; margin-bottom: 3px;">
+            2. Discrete Integer Hamilton-Hare Exact Allocation Engine
+          </div>
+          <p style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">
+            Bridged the gap between continuous asymptotic theory $\xi_i \in (0,1)$ and real-world integer constraints $\sum n_i = N$. Implemented the Hamilton-Hare largest-remainder rounding algorithm with degree-priority tie-breaking, ensuring exact integer sample sizes without power degradation.
+          </p>
+        </div>
+
+        <!-- Innovation 3 -->
+        <div style="background: #081a13; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <div style="font-size: 12px; font-weight: 700; color: #34d399; margin-bottom: 3px;">
+            3. Dynamic Arbitrary Comparison Graph Engine with Bipartiteness Detection
+          </div>
+          <p style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">
+            Developed an interactive $K \times K$ adjacency matrix editor with real-time Breadth-First Search (BFS) 2-coloring for automated bipartiteness verification and cut-vertex connectivity checking, enabling agronomists to design non-standard comparison networks beyond standard trees.
+          </p>
+        </div>
+
+        <!-- Innovation 4 -->
+        <div style="background: #081a13; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <div style="font-size: 12px; font-weight: 700; color: #34d399; margin-bottom: 3px;">
+            4. 2D Multi-Parametric Power Sensitivity & Robustness Explorer
+          </div>
+          <p style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">
+            Created a 2D sensitivity matrix surface evaluating design stability against uncertain prior response rates ($\theta_c \in [0.20, 0.60]$) and effect sizes ($\delta \in [0.15, 0.45]$) using Poisson-mixture non-central $\chi^2$ CDF inversion.
+          </p>
+        </div>
+
+        <!-- Innovation 5 -->
+        <div style="background: #081a13; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <div style="font-size: 12px; font-weight: 700; color: #34d399; margin-bottom: 3px;">
+            5. Operational Field & Lab Randomized Plot Allocation Engine
+          </div>
+          <p style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">
+            Engineered an experimental execution tool converting optimal group sizes into randomized field plot and nursery tray assignments via the Fisher-Yates algorithm, complete with downloadable CSV field plans and printable PDF protocols.
+          </p>
+        </div>
+
+        <!-- Innovation 6 -->
+        <div style="background: #081a13; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <div style="font-size: 12px; font-weight: 700; color: #34d399; margin-bottom: 3px;">
+            6. Cross-Platform Deployable Ecosystem (Android APK + PWA + R/Python Packages)
+          </div>
+          <p style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">
+            Packaged the entire suite into a standalone signed Android APK (API 21-35, Android PrintManager, MediaStore, ShareSheet), a Progressive Web App (PWA) with offline caching, and reproducible R 4.5.1 and Python 3.12 packages for open science.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Institutional Affiliation Card -->
     <div class="card">
       <div class="card-header">
         <div class="card-title"><span class="card-title-icon">🏛</span> Institutional Affiliation</div>
@@ -871,22 +985,8 @@ canvas { display: block; width: 100%; }
       <p style="font-size: 12px; color: #cbd5e1; line-height: 1.6;">
         <strong>ICAR - Indian Agricultural Statistics Research Institute</strong><br/>
         Library Avenue, Pusa, New Delhi - 110012, India.<br/>
-        A premier institute dedicated to research, education, and training in Agricultural Statistics, Computer Applications, and Bioinformatics.
+        <em>A premier institute under the Indian Council of Agricultural Research (ICAR), Department of Agricultural Research and Education (DARE), Ministry of Agriculture and Farmers Welfare, Government of India.</em>
       </p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><span class="card-title-icon">📚</span> Primary Research Reference</div>
-      </div>
-      <p style="font-size: 12px; color: #cbd5e1; line-height: 1.6;">
-        <strong>Singh, S. P., and Davidov, O. (2026).</strong><br/>
-        <em>Max-min experimental designs for comparing pairs of treatments with binary outcomes.</em><br/>
-        Journal of Statistical Planning and Inference, 243, 106379.
-      </p>
-      <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">
-        Additional foundations: Dunnett (1955), Hochberg & Tamhane (1987), Singh & Davidov (2019, 2020), Singh, Singh & Davidov (2025).
-      </div>
     </div>
   </div>
 
@@ -2130,9 +2230,10 @@ function generateReportText() {
   p += `Max-Min Allocation for Binary Treatment Comparisons\n`;
   p += `========================================================\n\n`;
   p += `Date: ${dateStr}\n`;
-  p += `Principal Investigator: Lunganlung P G, Ph.D. Scholar (Roll: 13173)\n`;
-  p += `Institution: ICAR-Indian Agricultural Statistics Research Institute, New Delhi\n`;
-  p += `Theoretical Reference: Singh & Davidov (2026), JSPI, 243, 106379\n\n`;
+  p += `Principal Investigator / Author: Lunganlung P G, Ph.D. Scholar (Roll No: 13173)\n`;
+  p += `Institution: ICAR-Indian Agricultural Statistics Research Institute, New Delhi 110012\n`;
+  p += `Foundational Theory: Satya Prakash Singh (ICAR-IASRI) & Ori Davidov (Univ. of Haifa) (2026), JSPI, 243, 106379\n`;
+  p += `Methodological Innovations & Software: Lunganlung P G (ICAR-IASRI)\n\n`;
 
   p += `[1] EXPERIMENT SPECIFICATIONS\n`;
   p += `--------------------------------------------------------\n`;
