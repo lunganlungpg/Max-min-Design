@@ -5,7 +5,7 @@
 
 ### 👨‍🔬 Authorship & Academic Credentials
 - **Research Innovations, Methodology & Software Suite**:  
-  **Lunganlung P G**, Ph.D. Scholar (Agricultural Statistics), Roll No: **13173**  
+  **Lunganlung P G**, Agricultural Statistics, Roll No: **13173**  
   *ICAR - Indian Agricultural Statistics Research Institute (ICAR-IASRI)*  
   Library Avenue, Pusa, New Delhi – 110012, India.
 
@@ -37,7 +37,7 @@ In experimental studies where multiple treatments are evaluated against one anot
 
 ---
 
-## 💡 Ph.D. Research Innovations & Methodological Extensions by Lunganlung P G
+## 💡 Research Innovations & Methodological Extensions by Lunganlung P G
 
 To bridge the gap between abstract mathematical derivations and real-world agricultural and laboratory trial execution, **Lunganlung P G** developed six original contributions and extensions integrated into this suite:
 
@@ -125,13 +125,13 @@ python verify_apk.py
 
 ## 📖 Citations & References
 
-If you use this software or methodology in your research, please cite both the foundational theoretical paper and the doctoral software implementation:
+If you use this software or methodology in your research, please cite both the foundational theoretical paper and the software implementation:
 
 1. **Foundational Theoretical Paper**:
    > Singh, S. P., and Davidov, O. (2026). Max–min experimental designs for comparing pairs of treatments with binary outcomes. *Journal of Statistical Planning and Inference*, 243, 106379. DOI: [10.1016/j.jspi.2025.106379](https://doi.org/10.1016/j.jspi.2025.106379).
 
 2. **Computational Extensions & Software Toolkit**:
-   > Lunganlung P G (2026). *MaxMin Design: An Interactive Experimental Optimization and Field Randomization Suite for Pairwise Binary Treatment Comparisons*. Ph.D. Research Suite, ICAR-Indian Agricultural Statistics Research Institute (ICAR-IASRI), New Delhi, India. GitHub: [https://github.com/lunganlungpg/Max-min-Design](https://github.com/lunganlungpg/Max-min-Design).
+   > Lunganlung P G (2026). *MaxMin Design: An Interactive Experimental Optimization and Field Randomization Suite for Pairwise Binary Treatment Comparisons*. Research Suite, ICAR-Indian Agricultural Statistics Research Institute (ICAR-IASRI), New Delhi, India. GitHub: [https://github.com/lunganlungpg/Max-min-Design](https://github.com/lunganlungpg/Max-min-Design).
 
 3. **Related Literature**:
    - Dunnett, C. W. (1955). A multiple comparison procedure for comparing several treatments with a control. *JASA*, 50(272), 1096–1121.
