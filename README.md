@@ -5,7 +5,7 @@
 
 ### 👨‍🔬 Authorship & Academic Credentials
 - **Research Innovations, Methodology & Software Suite**:  
-  **Lunganlung P G**, Agricultural Statistics, Roll No: **13173**  
+  **Lunganlung P G**, Agricultural Statistics, 
   *ICAR - Indian Agricultural Statistics Research Institute (ICAR-IASRI)*  
   Library Avenue, Pusa, New Delhi – 110012, India.
 
