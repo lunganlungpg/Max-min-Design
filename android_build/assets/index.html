@@ -1,0 +1,2442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>MaxMin Design - Binary Treatment Comparisons</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#0d3827"/>
+<link rel="apple-touch-icon" href="icon_192.png"/>
+
+<style>
+:root {
+  --bg-dark: #07140e;
+  --bg-card: #0e231a;
+  --bg-card-hover: #143225;
+  --border: #1a4231;
+  --border-light: #245842;
+  --primary: #10b981;
+  --primary-dark: #059669;
+  --primary-light: #34d399;
+  --accent-gold: #f59e0b;
+  --accent-blue: #38bdf8;
+  --accent-orange: #fb923c;
+  --text-main: #f0fdf4;
+  --text-muted: #94a3b8;
+  --danger: #f87171;
+  --success: #34d399;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg-dark); color: var(--text-main); font-size: 14px; line-height: 1.5; padding-bottom: 75px; }
+
+/* Header */
+header {
+  background: linear-gradient(135deg, #071f16 0%, #0d3827 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+.header-top { display: flex; align-items: center; justify-content: space-between; }
+.logo-title { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; font-weight: 900; color: #07140e; font-size: 18px; box-shadow: 0 0 12px rgba(16,185,129,0.4); }
+.app-title h1 { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.2px; }
+.app-title p { font-size: 11px; color: var(--primary-light); font-weight: 500; }
+.badge-iasri { background: rgba(16,185,129,0.15); border: 1px solid var(--primary); color: var(--primary-light); font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 14px; letter-spacing: 0.3px; }
+
+/* Navigation Bar */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(11, 28, 20, 0.96);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 2px 8px;
+  z-index: 100;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  min-width: 54px;
+}
+.nav-btn svg { width: 20px; height: 20px; fill: currentColor; }
+.nav-btn.active { color: var(--primary-light); background: rgba(16,185,129,0.15); font-weight: 700; }
+
+/* Content Container */
+.container { padding: 14px 14px; max-width: 800px; margin: 0 auto; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.22s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.28);
+}
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px; }
+.card-title { font-size: 14px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+.card-title-icon { color: var(--primary); }
+
+/* Quick Metric Stat Grid */
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+.stat-card {
+  background: linear-gradient(145deg, #122c22, #0d221a);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
+.stat-card.gold::before { background: var(--accent-gold); }
+.stat-card.blue::before { background: var(--accent-blue); }
+.stat-card.orange::before { background: var(--accent-orange); }
+.stat-label { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-val { font-size: 22px; font-weight: 800; color: #fff; margin: 3px 0 2px; }
+.stat-sub { font-size: 11px; color: var(--primary-light); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.stat-sub.positive { color: var(--success); }
+.stat-sub.neutral { color: var(--text-muted); }
+
+/* Forms & Controls */
+.form-group { margin-bottom: 12px; }
+.form-label { display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
+.select-input, .text-input {
+  width: 100%;
+  background: #081610;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #fff;
+  padding: 9px 11px;
+  font-size: 13px;
+  outline: none;
+  transition: border 0.2s;
+}
+.select-input:focus, .text-input:focus { border-color: var(--primary); }
+
+.range-row { display: flex; align-items: center; gap: 12px; }
+.range-slider { flex: 1; accent-color: var(--primary); height: 6px; }
+.range-badge { background: #081610; border: 1px solid var(--border); padding: 3px 9px; border-radius: 6px; font-weight: 700; color: var(--primary-light); min-width: 52px; text-align: center; font-size: 12px; }
+
+/* Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--primary);
+  color: #052317;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+.btn:active { transform: scale(0.98); }
+.btn-secondary { background: #163629; color: #e2e8f0; border: 1px solid var(--border); }
+.btn-outline { background: transparent; color: var(--primary-light); border: 1px solid var(--primary); }
+.btn-sm { padding: 6px 12px; font-size: 11px; width: auto; }
+
+/* Graph Choice Pills */
+.pill-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; }
+.pill-btn {
+  background: #081711;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 10px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pill-btn.active {
+  background: rgba(16,185,129,0.16);
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(16,185,129,0.25);
+}
+.pill-btn-title { font-weight: 700; font-size: 12px; color: #fff; margin-bottom: 2px; }
+.pill-btn-desc { font-size: 10px; color: var(--text-muted); }
+
+/* Table */
+.table-wrap { overflow-x: auto; margin-top: 8px; border-radius: 8px; border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+th { background: #0b1f17; color: #94a3b8; padding: 8px 10px; font-weight: 600; border-bottom: 1px solid var(--border); white-space: nowrap; }
+td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e2e8f0; white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+tr.highlight { background: rgba(16,185,129,0.09); font-weight: 700; color: #fff; }
+.tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+.tag-control { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+.tag-trt { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+.tag-mm { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+
+/* Canvas Visualizer */
+.canvas-box {
+  background: #06110c;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 8px;
+}
+canvas { display: block; width: 100%; }
+
+/* Tab specific styling */
+.paper-quote {
+  background: rgba(16, 185, 129, 0.06);
+  border-left: 3px solid var(--primary);
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 12px;
+  color: #cbd5e1;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+.formula-box {
+  background: #06120c;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;
+  color: var(--primary-light);
+  margin: 8px 0;
+  overflow-x: auto;
+}
+.author-box {
+  background: linear-gradient(135deg, #132a20, #0c1c15);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #052317;
+  font-weight: 800;
+  font-size: 19px;
+  flex-shrink: 0;
+}
+.author-info h3 { font-size: 15px; font-weight: 700; color: #fff; }
+.author-info p { font-size: 11px; color: #94a3b8; }
+.author-info .roll { color: var(--accent-gold); font-weight: 600; font-size: 11px; }
+
+/* Chip rows */
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.chip { background: #0e2219; border: 1px solid var(--border); padding: 5px 10px; border-radius: 16px; font-size: 11px; color: #cbd5e1; cursor: pointer; user-select: none; }
+.chip.active { background: var(--primary); color: #062115; font-weight: 700; border-color: var(--primary); }
+
+/* Custom Graph Matrix */
+.matrix-grid { display: grid; gap: 4px; margin-top: 8px; overflow-x: auto; padding-bottom: 6px; }
+.matrix-cell {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: #081711;
+  color: #64748b;
+  user-select: none;
+}
+.matrix-cell.connected { background: var(--primary); color: #071911; border-color: var(--primary-light); }
+.matrix-cell.header { background: #0f2d21; color: #a7f3d0; cursor: default; border-color: var(--border-light); }
+.matrix-cell.disabled { background: #050e09; color: #334155; cursor: not-allowed; border-color: transparent; }
+
+/* Switch toggle */
+.switch-box { display: flex; align-items: center; justify-content: space-between; background: #081711; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px; }
+.switch-label { font-size: 12px; font-weight: 600; color: #e2e8f0; }
+
+@media print {
+  header, .bottom-nav, .range-row, .pill-grid, .btn { display: none !important; }
+  body { background: #fff !important; color: #000 !important; font-size: 11pt; }
+  .card { border: 1px solid #ccc !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
+  table, th, td { color: #000 !important; border-color: #ccc !important; }
+  .tab-content { display: block !important; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo-title">
+      <div class="logo-icon">M</div>
+      <div class="app-title">
+        <h1>MaxMin Design</h1>
+        <p>Binary Treatment Comparisons (IASRI)</p>
+      </div>
+    </div>
+    <div class="badge-iasri">ICAR-IASRI</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- TAB 1: DESIGN OPTIMIZER & CALCULATOR -->
+  <div id="tab-calculator" class="tab-content active">
+
+    <!-- Top KPI Highlights -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Max-Min Power (πMM)</div>
+        <div class="stat-val" id="kpi-pow-mm">0.880</div>
+        <div class="stat-sub positive" id="kpi-pow-gain">+15.6% vs Balanced</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-label">Sample Size (90% Power)</div>
+        <div class="stat-val" id="kpi-n-mm">510</div>
+        <div class="stat-sub positive" id="kpi-n-red">-24.4% Seed/Unit Savings</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Balanced Power (πBL)</div>
+        <div class="stat-val" id="kpi-pow-bl">0.761</div>
+        <div class="stat-sub neutral" id="kpi-ncp-gain">+56.2% NCP Gain</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Non-Centrality (ϕMM)</div>
+        <div class="stat-val" id="kpi-ncp-val">15.82</div>
+        <div class="stat-sub neutral" id="kpi-df-crit">df: 4 | Crit: 9.49</div>
+      </div>
+    </div>
+
+    <!-- Graph Model Selector -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="card-title-icon">❖</span> Comparison Graph Topology
+        </div>
+        <span class="tag tag-mm" id="connectivity-badge">Connected</span>
+      </div>
+
+      <div class="pill-grid">
+        <div class="pill-btn active" onclick="setGraphModel('tree')" id="pill-tree">
+          <div class="pill-btn-title">Control vs Treatments</div>
+          <div class="pill-btn-desc">Tree graph: 1 control vs K-1 active</div>
+        </div>
+        <div class="pill-btn" onclick="setGraphModel('bipartite')" id="pill-bipartite">
+          <div class="pill-btn-title">Complete Bipartite</div>
+          <div class="pill-btn-desc">K1 controls vs K2 active treatments</div>
+        </div>
+        <div class="pill-btn" onclick="setGraphModel('path')" id="pill-path">
+          <div class="pill-btn-title">Dose-Response (Path)</div>
+          <div class="pill-btn-desc">Adjacent doses: 1-2, 2-3, ..., (K-1)-K</div>
+        </div>
+        <div class="pill-btn" onclick="setGraphModel('complete')" id="pill-complete">
+          <div class="pill-btn-title">Complete Graph</div>
+          <div class="pill-btn-desc">All pairwise comparisons (Balanced)</div>
+        </div>
+      </div>
+
+      <!-- Custom Graph Toggle Button -->
+      <div style="margin-bottom: 12px;">
+        <button class="btn btn-secondary btn-sm" style="width: 100%; justify-content: flex-start;" onclick="toggleCustomGraphMode()" id="btn-custom-graph">
+          ✏️ Build Custom Comparison Graph (Interactive Matrix)
+        </button>
+      </div>
+
+      <!-- Custom Edge Matrix Panel (Hidden by default) -->
+      <div id="custom-matrix-panel" style="display: none; background: #071911; padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-size:11px; font-weight:700; color:var(--primary-light);">Click cell (i, j) to toggle pairwise comparison:</span>
+          <button class="btn btn-outline btn-sm" onclick="resetCustomGraphEdges()">Reset All</button>
+        </div>
+        <div id="matrixContainer" class="matrix-grid"></div>
+      </div>
+
+      <!-- Parameters Form -->
+      <div class="form-group" id="group-k-wrapper">
+        <label class="form-label" id="label-k-config">Number of Treatments (K)</label>
+        <div class="chip-row" id="k-chips">
+          <div class="chip" onclick="setK(3)">3</div>
+          <div class="chip" onclick="setK(4)">4</div>
+          <div class="chip active" onclick="setK(5)">5</div>
+          <div class="chip" onclick="setK(6)">6</div>
+          <div class="chip" onclick="setK(7)">7</div>
+          <div class="chip" onclick="setK(8)">8</div>
+        </div>
+      </div>
+
+      <div id="bipartite-splits" style="display: none; margin-bottom: 12px;">
+        <div style="display: flex; gap: 10px;">
+          <div style="flex: 1;">
+            <label class="form-label">Controls Partition (K1)</label>
+            <input type="number" id="input-k1" class="text-input" min="1" max="5" value="2" onchange="updateCalculations()"/>
+          </div>
+          <div style="flex: 1;">
+            <label class="form-label">Treatments Partition (K2)</label>
+            <input type="number" id="input-k2" class="text-input" min="1" max="6" value="3" onchange="updateCalculations()"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sample Size & Delta Controls -->
+      <div class="form-group">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <label class="form-label">Total Sample Size (N)</label>
+          <span class="range-badge" id="val-n">480</span>
+        </div>
+        <div class="range-row">
+          <input type="range" id="range-n" class="range-slider" min="20" max="800" step="10" value="480" oninput="onNChange(this.value)"/>
+        </div>
+      </div>
+
+      <!-- Mode Selector: LFC vs Custom Probabilities -->
+      <div class="switch-box">
+        <span class="switch-label">Probabilities Mode:</span>
+        <div class="chip-row" style="margin:0;">
+          <div class="chip active" id="chip-mode-lfc" onclick="setProbMode('lfc')">LFC (from δ)</div>
+          <div class="chip" id="chip-mode-custom" onclick="setProbMode('custom')">Custom θi</div>
+        </div>
+      </div>
+
+      <div class="form-group" id="delta-control-box">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <label class="form-label">Minimum Separation (δ)</label>
+          <span class="range-badge" id="val-delta">0.40</span>
+        </div>
+        <div class="range-row">
+          <input type="range" id="range-delta" class="range-slider" min="0.10" max="0.70" step="0.05" value="0.40" oninput="onDeltaChange(this.value)"/>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-secondary btn-sm" onclick="setPresetAgri()">🌾 Load Agri Illustration</button>
+        <button class="btn btn-secondary btn-sm" onclick="solveForTargetPower()">🎯 Solve for 90% Power</button>
+      </div>
+    </div>
+
+    <!-- Interactive Comparison Graph Visualizer -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">◉</span> Comparison Graph & Degrees</div>
+        <span class="tag tag-mm" id="graph-meta">Edges: 4 | Rank: 4</span>
+      </div>
+      <div class="canvas-box">
+        <canvas id="graphCanvas" height="210"></canvas>
+      </div>
+    </div>
+
+    <!-- Allocation Breakdown Table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">▦</span> Exact Allocation & Group Sizes</div>
+        <span class="tag tag-mm">Sum(n) = N</span>
+      </div>
+      <div class="table-wrap">
+        <table id="allocTable">
+          <thead>
+            <tr>
+              <th>Group</th>
+              <th>Role</th>
+              <th>Deg (d)</th>
+              <th>ξ MM</th>
+              <th>n MM</th>
+              <th>n BL</th>
+              <th>Diff</th>
+              <th>θ (Rate)</th>
+            </tr>
+          </thead>
+          <tbody id="allocTableBody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Comparative Visual Charts -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">📊</span> Allocation Comparison (nMM vs nBL)</div>
+      </div>
+      <div class="canvas-box">
+        <canvas id="barCanvas" height="180"></canvas>
+      </div>
+    </div>
+
+    <!-- Power vs Total Sample Size Curve -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">📈</span> Power Curve vs Sample Size (N)</div>
+        <span class="tag tag-control">Target 90%</span>
+      </div>
+      <div class="canvas-box">
+        <canvas id="curveCanvas" height="190"></canvas>
+      </div>
+    </div>
+
+    <!-- 2D Sensitivity Heatmap Card (Section 4.4) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">🌡️</span> Sensitivity Analysis Matrix (Section 4.4)</div>
+        <span class="tag tag-mm">Robustness Check</span>
+      </div>
+      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
+        Evaluates power across a grid of plausible control response rates (θ_ctrl) and effect sizes (δ) for current sample size N = <span id="sens-n-display">480</span>.
+      </p>
+      <div class="table-wrap">
+        <table style="text-align:center;">
+          <thead>
+            <tr>
+              <th style="text-align:left;">θ_ctrl \ δ</th>
+              <th>δ = 0.15</th>
+              <th>δ = 0.25</th>
+              <th>δ = 0.35</th>
+              <th>δ = 0.45</th>
+            </tr>
+          </thead>
+          <tbody id="sensTableBody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:10px; margin-top:8px; color:#94a3b8;">
+        <span><span style="color:#10b981; font-weight:700;">■</span> ≥90% High</span>
+        <span><span style="color:#34d399; font-weight:700;">■</span> 80-89% Good</span>
+        <span><span style="color:#f59e0b; font-weight:700;">■</span> 70-79% Mod</span>
+        <span><span style="color:#f87171; font-weight:700;">■</span> &lt;70% Low</span>
+      </div>
+    </div>
+
+    <!-- Field & Laboratory Randomizer Card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">🎲</span> Experimental Field / Lab Randomizer</div>
+        <button class="btn btn-secondary btn-sm" onclick="generateFieldRandomization()">Re-Randomize</button>
+      </div>
+      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
+        Generates an unbiased randomized layout mapping N units to treatments according to the exact integer allocation n_MM.
+      </p>
+      <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+        <input type="text" id="randSearchInput" class="text-input" placeholder="Search treatment or unit..." oninput="filterRandomizationTable(this.value)" style="padding:6px 10px; font-size:11px;"/>
+        <button class="btn btn-sm" style="width: auto; white-space: nowrap;" onclick="saveRandomizationCSV()">💾 Save CSV</button>
+      </div>
+      <div class="table-wrap" style="max-height: 220px; overflow-y: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Unit #</th>
+              <th>Plot/Tray Cell</th>
+              <th>Group</th>
+              <th>Treatment Name</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody id="randomizerTableBody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Contrast Matrix R & Test Details (Section 2.2) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">📐</span> Contrast Matrix R & Weights w_j</div>
+      </div>
+      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
+        Contrast basis of rank K-1: R θ = (θ_1 - θ_K, ..., θ_{K-1} - θ_K)ᵀ and inverse-variance weights w_j = n_j / [θ_j(1 - θ_j)].
+      </p>
+      <div id="contrastMatrixView" style="font-family: monospace; font-size: 11px; background:#06120c; border:1px solid var(--border); border-radius:8px; padding:10px; color:#a7f3d0; overflow-x:auto; white-space:pre;"></div>
+    </div>
+
+
+  </div>
+
+  <!-- TAB 2: AGRICULTURAL CASE STUDY -->
+  <div id="tab-agricultural" class="tab-content">
+    <div class="author-box">
+      <div class="author-avatar">🌱</div>
+      <div class="author-info">
+        <h3>Seedling-Emergence Experiment</h3>
+        <p>5 Seed Treatments with Binary Response (Day 10 Emergence)</p>
+        <span class="roll">Section 4.3 Reproduction | N = 480 Seeds</span>
+      </div>
+    </div>
+
+    <!-- Observed Data Table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">🌾</span> Table 2. Seed-Emergence Dataset</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Group</th>
+              <th>Treatment</th>
+              <th>Seeds (ni)</th>
+              <th>Emerged</th>
+              <th>Estimate (θi)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Untreated control</td><td>92</td><td>38</td><td><strong>0.413</strong></td></tr>
+            <tr><td>2</td><td>Hydro-priming</td><td>100</td><td>51</td><td><strong>0.510</strong></td></tr>
+            <tr><td>3</td><td>Bio-priming</td><td>94</td><td>58</td><td><strong>0.617</strong></td></tr>
+            <tr><td>4</td><td>Fungicide dressing</td><td>98</td><td>55</td><td><strong>0.561</strong></td></tr>
+            <tr><td>5</td><td>Integrated treatment</td><td>96</td><td>58</td><td><strong>0.604</strong></td></tr>
+            <tr class="highlight"><td>Total</td><td>5 Groups</td><td>480</td><td>260</td><td>0.542</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 4 Comparison Graphs Selector -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">🔀</span> Figure 2. Comparison Structures</div>
+      </div>
+
+      <div class="pill-grid">
+        <div class="pill-btn active" id="agri-pill-a" onclick="setAgriGraph('a')">
+          <div class="pill-btn-title">Graph (a): Star Tree</div>
+          <div class="pill-btn-desc">1 vs {2,3,4,5} | Deg: 4,1,1,1,1</div>
+        </div>
+        <div class="pill-btn" id="agri-pill-b" onclick="setAgriGraph('b')">
+          <div class="pill-btn-title">Graph (b): Dual Ref ★</div>
+          <div class="pill-btn-desc">1 vs {3,4,5} & 2 vs 3 | Deg: 3,1,2,1,1</div>
+        </div>
+        <div class="pill-btn" id="agri-pill-c" onclick="setAgriGraph('c')">
+          <div class="pill-btn-title">Graph (c): Cross Ref</div>
+          <div class="pill-btn-desc">1 vs {3,4,5} & 2 vs {3,4}</div>
+        </div>
+        <div class="pill-btn" id="agri-pill-d" onclick="setAgriGraph('d')">
+          <div class="pill-btn-title">Graph (d): Complete Bip</div>
+          <div class="pill-btn-desc">{1,2} vs {3,4,5} | Deg: 3,3,2,2,2</div>
+        </div>
+      </div>
+
+      <div class="canvas-box" style="margin-bottom: 12px;">
+        <canvas id="agriGraphCanvas" height="190"></canvas>
+      </div>
+
+      <!-- Efficiency & Power Table -->
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">🏆</span> Power & Sample-Size Efficiency</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Graph</th>
+              <th>π BL</th>
+              <th>π AC (Actual)</th>
+              <th>π MM (MaxMin)</th>
+              <th>N (90%)</th>
+              <th>Reduction vs BL</th>
+              <th>Reduction vs AC</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="agri-row-a"><td>(a)</td><td>0.761</td><td>0.747</td><td><strong>0.880</strong></td><td>510</td><td>24.44%</td><td>26.41%</td></tr>
+            <tr id="agri-row-b" class="highlight"><td>(b) ★</td><td>0.761</td><td>0.747</td><td><strong>0.902</strong></td><td>479</td><td><strong>29.04%</strong></td><td><strong>30.88%</strong></td></tr>
+            <tr id="agri-row-c"><td>(c)</td><td>0.761</td><td>0.747</td><td><strong>0.828</strong></td><td>581</td><td>13.93%</td><td>16.16%</td></tr>
+            <tr id="agri-row-d"><td>(d)</td><td>0.761</td><td>0.747</td><td><strong>0.790</strong></td><td>634</td><td>6.07%</td><td>8.51%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Interactive Chart for Figure 3 -->
+      <div style="margin-top: 14px;">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">📊</span> Figure 3. Power Comparison at N = 480</div>
+        </div>
+        <div class="canvas-box">
+          <canvas id="agriBarCanvas" height="180"></canvas>
+        </div>
+      </div>
+
+      <div class="paper-quote" style="margin-top: 14px;">
+        <strong>Agronomic Significance:</strong> Graph (b) achieves the highest power (0.902) and largest seed savings (30.88%) because its degree vector concentrates 37.5% allocation to Untreated Control (0.413) and 25% to Bio-priming (0.617), precisely protecting the maximally separated treatment pair in the trial.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: EXTENDED SIMULATION EXPLORER -->
+  <div id="tab-simulation" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">🔬</span> Section 4.2 Simulation Explorer</div>
+        <span class="tag tag-control">N = 50 & 90% Power</span>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+        Evaluation under Least Favourable Configurations (LFC) where partition 1 has θ = 0.5 - δ/2 and partition 2 has θ = 0.5 + δ/2.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label">Separation Distance (δ)</label>
+        <div class="chip-row">
+          <div class="chip" onclick="setSimDelta(0.30)" id="sim-d30">δ = 0.30</div>
+          <div class="chip active" onclick="setSimDelta(0.40)" id="sim-d40">δ = 0.40 (Fig 1)</div>
+          <div class="chip" onclick="setSimDelta(0.50)" id="sim-d50">δ = 0.50</div>
+        </div>
+      </div>
+
+      <!-- Simulation Table 1A -->
+      <div class="card-header" style="margin-top: 10px;">
+        <div class="card-title"><span class="card-title-icon">▦</span> Table 1A: Power at N = 50</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Graph</th>
+              <th>K1, K2</th>
+              <th>π BL</th>
+              <th>π MM</th>
+              <th>Power Gain</th>
+              <th>NCP Gain</th>
+            </tr>
+          </thead>
+          <tbody id="simTable1ABody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Simulation Table 1B -->
+      <div class="card-header" style="margin-top: 14px;">
+        <div class="card-title"><span class="card-title-icon">▦</span> Table 1B: Sample Size for 90% Power</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Graph</th>
+              <th>K1, K2</th>
+              <th>N BL</th>
+              <th>N MM</th>
+              <th>Sample Reduction</th>
+            </tr>
+          </thead>
+          <tbody id="simTable1BBody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Figure 1 Interactive Chart -->
+      <div style="margin-top: 14px;">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">📊</span> Figure 1: Efficiency Gains Chart</div>
+        </div>
+        <div class="canvas-box">
+          <canvas id="simBarCanvas" height="200"></canvas>
+        </div>
+      </div>
+
+      <div class="formula-box" style="margin-top: 12px;">
+        NCP Gain Formula = 100 * (K1 - K2)^2 / (4 * K1 * K2) %
+      </div>
+      <p style="font-size: 11px; color: var(--text-muted);">
+        Notice that NCP gain is an exact geometric property of the graph structure and remains invariant to δ!
+      </p>
+    </div>
+  </div>
+
+  <!-- TAB 4: THEORETICAL HANDBOOK -->
+  <div id="tab-theory" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">📖</span> Theoretical Foundations</div>
+      </div>
+
+      <div class="paper-quote">
+        "Singh and Davidov (2026) study how a fixed number of experimental units should be allocated among treatment groups when the response is binary and only specified pairs of treatments are to be compared."
+      </div>
+
+      <h4 style="color: #fff; margin: 12px 0 6px;">1. Comparison Graphs</h4>
+      <p style="font-size: 12px; color: #cbd5e1;">
+        Let experimental groups be vertices <code>K = {1, ..., K}</code> and pairwise comparisons be edges <code>P</code>. For any connected graph, the contrast matrix has rank <code>K - 1</code>.
+      </p>
+
+      <h4 style="color: #fff; margin: 14px 0 6px;">2. Wald Test Statistic & Invariance</h4>
+      <div class="formula-box">
+        T = R θ̂ᵀ (R Σ̂ Rᵀ)⁻¹ R θ̂
+      </div>
+      <p style="font-size: 12px; color: #cbd5e1;">
+        <strong>Theorem 2.1:</strong> The statistic <code>T_ALL</code> using all graph contrasts is identical to <code>T</code> based on any <code>K - 1</code> linearly independent contrast rows.
+      </p>
+
+      <h4 style="color: #fff; margin: 14px 0 6px;">3. Non-Centrality Parameter (Equation 9)</h4>
+      <div class="formula-box">
+        w_j = n_j / [θ_j (1 - θ_j)]<br/>
+        ϕ(n; θ) = Σ_{j=1}^{K-1} w_j (θ_j - θ_K)² - [Σ_{j=1}^{K-1} w_j (θ_j - θ_K)]² / Σ_{j=1}^K w_j
+      </div>
+
+      <h4 style="color: #fff; margin: 14px 0 6px;">4. Optimal Max-Min Allocations</h4>
+      <div style="background: #081a13; border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin: 8px 0;">
+        <p style="font-size: 12px; color: #fff; font-weight: 700; margin-bottom: 4px;">• Theorem 3.1 (Known Maximally Separated Pair):</p>
+        <p style="font-size: 11px; color: #94a3b8;">Assign 50% to group i and 50% to group j: <strong>ξ_MM = (e_i + e_j)/2</strong></p>
+      </div>
+
+      <div style="background: #081a13; border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin: 8px 0;">
+        <p style="font-size: 12px; color: #fff; font-weight: 700; margin-bottom: 4px;">• Theorem 3.2 (Complete Graph):</p>
+        <p style="font-size: 11px; color: #94a3b8;">Balanced allocation: <strong>ξ_MM = (1/K, ..., 1/K)ᵀ</strong></p>
+      </div>
+
+      <div style="background: #081a13; border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin: 8px 0;">
+        <p style="font-size: 12px; color: #fff; font-weight: 700; margin-bottom: 4px;">• Theorem 3.3 (Bipartite Graphs):</p>
+        <p style="font-size: 11px; color: #94a3b8;">Degree-based rule: <strong>ξ_MM = 1/(2|P|) (d_1, ..., d_K)ᵀ</strong></p>
+        <p style="font-size: 11px; color: var(--primary-light); margin-top: 4px;">
+          - Control vs Multiple: Control receives 1/2 of sample, treatments divide 1/2 equally.<br/>
+          - Path Graph (Dose-response): Endpoints receive 1/(2K-2), interior vertices receive 1/(K-1).<br/>
+          - Complete Bipartite: Half total sample to partition 1, half to partition 2.
+        </p>
+      </div>
+
+      <h4 style="color: #fff; margin: 14px 0 6px;">5. Normal vs Bernoulli Response</h4>
+      <p style="font-size: 12px; color: #cbd5e1;">
+        Although optimal allocations coincide with normal responses, Least Favourable Configurations differ because the Bernoulli variance <code>θ(1 - θ)</code> is intrinsically tied to the success probability mean.
+      </p>
+    </div>
+  </div>
+
+  <!-- TAB 5: PROTOCOL EXPORT -->
+  <div id="tab-export" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">📋</span> Trial Design Protocol Report</div>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+        Formatted experimental protocol ready for field trial registration, ethical review, and laboratory records.
+      </p>
+
+      <textarea id="reportText" readonly style="width: 100%; height: 260px; background: #06110c; border: 1px solid var(--border); border-radius: 8px; color: #a7f3d0; font-family: monospace; font-size: 11px; padding: 12px; resize: none; margin-bottom: 12px; outline: none;"></textarea>
+
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button class="btn" onclick="shareProtocol()">📤 Share via Android (WhatsApp / Mail)</button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="saveReportToDownloads()">💾 Save Report (.txt)</button>
+          <button class="btn btn-secondary" onclick="saveCSVToDownloads()">📊 Save CSV Data</button>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="printProtocol()">🖨️ Print / Save PDF</button>
+          <button class="btn btn-secondary" onclick="copyProtocol()">📋 Copy to Clipboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 6: ABOUT & CREDITS -->
+  <div id="tab-about" class="tab-content">
+    <div class="author-box">
+      <div class="author-avatar">LP</div>
+      <div class="author-info">
+        <h3>Lunganlung P G</h3>
+        <p>Ph.D. Scholar (Agricultural Statistics)</p>
+        <span class="roll">Roll No: 13173 | ICAR-IASRI, New Delhi</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">🏛</span> Institutional Affiliation</div>
+      </div>
+      <p style="font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+        <strong>ICAR - Indian Agricultural Statistics Research Institute</strong><br/>
+        Library Avenue, Pusa, New Delhi - 110012, India.<br/>
+        A premier institute dedicated to research, education, and training in Agricultural Statistics, Computer Applications, and Bioinformatics.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">📚</span> Primary Research Reference</div>
+      </div>
+      <p style="font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+        <strong>Singh, S. P., and Davidov, O. (2026).</strong><br/>
+        <em>Max-min experimental designs for comparing pairs of treatments with binary outcomes.</em><br/>
+        Journal of Statistical Planning and Inference, 243, 106379.
+      </p>
+      <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">
+        Additional foundations: Dunnett (1955), Hochberg & Tamhane (1987), Singh & Davidov (2019, 2020), Singh, Singh & Davidov (2025).
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAVIGATION BAR -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('calculator', this)">
+    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 2h2v3h3v2h-3v3h-2v-3H9V8h3V5zm-5 8h4v2H7v-2zm10 4H7v-2h10v2zm0-4h-4v-2h4v2z"/></svg>
+    Optimizer
+  </button>
+  <button class="nav-btn" onclick="switchTab('agricultural', this)">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    Agri Study
+  </button>
+  <button class="nav-btn" onclick="switchTab('simulation', this)">
+    <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+    Simulation
+  </button>
+  <button class="nav-btn" onclick="switchTab('theory', this)">
+    <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+    Theory
+  </button>
+  <button class="nav-btn" onclick="switchTab('export', this)">
+    <svg viewBox="0 0 24 24"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/></svg>
+    Export
+  </button>
+  <button class="nav-btn" onclick="switchTab('about', this)">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    About
+  </button>
+</nav>
+
+<script>
+/* ========================================================
+   MATHEMATICAL COMPUTATION ENGINE
+   ======================================================== */
+function logGamma(x) {
+  const p = [
+    676.5203681218851, -1259.1392167224028,
+    771.32342877765313, -176.61502916214059,
+    12.507343278686905, -0.138571095831109,
+    9.9843695780195716e-6, 1.5056327351493116e-7
+  ];
+  if (x < 0.5) {
+    return Math.log(Math.PI / Math.sin(Math.PI * x)) - logGamma(1.0 - x);
+  }
+  x -= 1.0;
+  let a = 0.99999999999980993;
+  for (let i = 0; i < p.length; i++) {
+    a += p[i] / (x + i + 1.0);
+  }
+  let t = x + p.length - 0.5;
+  return 0.5 * Math.log(2.0 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+}
+
+function gammaIncLower(s, x) {
+  if (x <= 0) return 0.0;
+  if (x < s + 1.0) {
+    let sum = 1.0 / s;
+    let term = 1.0 / s;
+    for (let n = 1; n < 100; n++) {
+      term *= x / (s + n);
+      sum += term;
+      if (Math.abs(term) < Math.abs(sum) * 1e-15) break;
+    }
+    return sum * Math.exp(-x + s * Math.log(x) - logGamma(s));
+  } else {
+    let b = x + 1.0 - s;
+    let c = 1.0 / 1e-30;
+    let d = 1.0 / b;
+    let h = d;
+    for (let i = 1; i < 100; i++) {
+      let a_i = -i * (i - s);
+      b += 2.0;
+      d = a_i * d + b;
+      if (Math.abs(d) < 1e-30) d = 1e-30;
+      c = b + a_i / c;
+      if (Math.abs(c) < 1e-30) c = 1e-30;
+      d = 1.0 / d;
+      let delta = d * c;
+      h *= delta;
+      if (Math.abs(delta - 1.0) < 1e-15) break;
+    }
+    let q = Math.exp(-x + s * Math.log(x) - logGamma(s)) * h;
+    return 1.0 - q;
+  }
+}
+
+function chi2Cdf(x, df) {
+  if (x <= 0) return 0.0;
+  return gammaIncLower(df / 2.0, x / 2.0);
+}
+
+function chi2Inv(p, df) {
+  const v = df;
+  const h = 2.0 / (9.0 * v);
+  const t = p >= 0.5 ? Math.sqrt(-2.0 * Math.log(1.0 - p)) : Math.sqrt(-2.0 * Math.log(p));
+  const c0 = 2.515517, c1 = 0.802853, c2 = 0.010328;
+  const d1 = 1.432788, d2 = 0.189269, d3 = 0.001308;
+  let zp = t - (c0 + c1*t + c2*t*t) / (1.0 + d1*t + d2*t*t + d3*t*t*t);
+  if (p < 0.5) zp = -zp;
+  let x = v * Math.pow(1.0 - h + zp * Math.sqrt(h), 3);
+  if (x <= 0) x = 0.001;
+  for (let iter = 0; iter < 20; iter++) {
+    let fx = chi2Cdf(x, df) - p;
+    let pdf = Math.exp(-x/2.0 + (df/2.0 - 1.0)*Math.log(x) - (df/2.0)*Math.log(2.0) - logGamma(df/2.0));
+    if (Math.abs(fx) < 1e-12) break;
+    x -= fx / pdf;
+    if (x <= 0) x = 0.0001;
+  }
+  return x;
+}
+
+function ncx2Cdf(x, df, phi) {
+  if (x <= 0) return 0.0;
+  if (phi < 1e-8) return chi2Cdf(x, df);
+  const lam = phi / 2.0;
+  const j0 = Math.floor(lam);
+  let sumVal = 0.0;
+
+  if (lam > 30) {
+    let logModeP = -lam + j0 * Math.log(lam) - logGamma(j0 + 1.0);
+    let curLogP = logModeP;
+    for (let k = j0; k < j0 + 200; k++) {
+      if (k > j0) curLogP += Math.log(lam) - Math.log(k);
+      let prob = Math.exp(curLogP);
+      sumVal += prob * chi2Cdf(x, df + 2 * k);
+      if (prob < 1e-14 && k > j0 + 10) break;
+    }
+    curLogP = logModeP;
+    for (let k = j0 - 1; k >= 0; k--) {
+      curLogP += Math.log(k + 1) - Math.log(lam);
+      let prob = Math.exp(curLogP);
+      sumVal += prob * chi2Cdf(x, df + 2 * k);
+      if (prob < 1e-14) break;
+    }
+  } else {
+    let prob = Math.exp(-lam);
+    for (let j = 0; j < 250; j++) {
+      sumVal += prob * chi2Cdf(x, df + 2 * j);
+      prob *= lam / (j + 1);
+      if (prob < 1e-14 && j > 20) break;
+    }
+  }
+  return Math.min(1.0, Math.max(0.0, sumVal));
+}
+
+function purePower(phi, df, alpha = 0.05) {
+  const c = chi2Inv(1.0 - alpha, df);
+  return 1.0 - ncx2Cdf(c, df, phi);
+}
+
+function largestRemainderRound(N, xi) {
+  const K = xi.length;
+  const raw = xi.map(x => N * x);
+  const integers = raw.map(r => Math.floor(r));
+  let remainder = N - integers.reduce((a, b) => a + b, 0);
+  const fractions = raw.map((r, i) => ({ frac: r - integers[i], idx: i }));
+  fractions.sort((a, b) => b.frac - a.frac);
+  for (let i = 0; i < remainder; i++) {
+    integers[fractions[i].idx] += 1;
+  }
+  return integers;
+}
+
+function calcNCP(n, theta) {
+  const K = n.length;
+  const w = [];
+  for (let j = 0; j < K; j++) {
+    const th = Math.min(0.999, Math.max(0.001, theta[j]));
+    w.push(n[j] / (th * (1.0 - th)));
+  }
+  let term1 = 0.0;
+  let term2 = 0.0;
+  const thK = theta[K - 1];
+  for (let j = 0; j < K - 1; j++) {
+    let diff = theta[j] - thK;
+    term1 += w[j] * diff * diff;
+    term2 += w[j] * diff;
+  }
+  const sumW = w.reduce((a, b) => a + b, 0);
+  return Math.max(0.0, term1 - (term2 * term2) / sumW);
+}
+
+function findSampleSize90(xi, theta, alpha = 0.05, targetPower = 0.90) {
+  const K = xi.length;
+  const df = K - 1;
+  const c = chi2Inv(1.0 - alpha, df);
+  for (let N = K; N <= 1500; N++) {
+    let n = largestRemainderRound(N, xi);
+    let phi = calcNCP(n, theta);
+    let p = 1.0 - ncx2Cdf(c, df, phi);
+    if (p >= targetPower) return N;
+  }
+  return 1500;
+}
+
+/* ========================================================
+   APPLICATION STATE & CONTROLLER
+   ======================================================== */
+const state = {
+  model: 'tree', // tree, bipartite, path, complete, custom
+  isCustomGraph: false,
+  customAdjMatrix: [],
+  K: 5,
+  K1: 1,
+  K2: 4,
+  N: 480,
+  delta: 0.40,
+  alpha: 0.05,
+  probMode: 'lfc', // 'lfc' or 'custom'
+  useAgriPreset: true,
+  theta: [0.413, 0.510, 0.617, 0.561, 0.604],
+  customTheta: [0.413, 0.510, 0.617, 0.561, 0.604],
+  groupNames: ["Untreated control", "Hydro-priming", "Bio-priming", "Fungicide dressing", "Integrated treatment"],
+  // Graph representation
+  edges: [],
+  degrees: [],
+  xiMM: [],
+  xiBL: [],
+  nMM: [],
+  nBL: [],
+  powerMM: 0,
+  powerBL: 0,
+  ncpMM: 0,
+  ncpBL: 0,
+  critVal: 0,
+  N90_MM: 0,
+  N90_BL: 0,
+  isConnected: true,
+  // Agriculture Tab Selected Graph
+  agriGraph: 'b',
+  // Simulation Tab Selected Delta
+  simDelta: 0.40
+};
+
+function switchTab(tabId, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  if (el) el.classList.add('active');
+  window.scrollTo(0, 0);
+  if (tabId === 'calculator') {
+    renderAllVisualizations();
+  } else if (tabId === 'agricultural') {
+    renderAgriTab();
+  } else if (tabId === 'simulation') {
+    renderSimulationTab();
+  } else if (tabId === 'export') {
+    generateReport();
+  }
+}
+
+function setGraphModel(m) {
+  state.model = m;
+  state.isCustomGraph = false;
+  state.useAgriPreset = false;
+  document.getElementById('custom-matrix-panel').style.display = 'none';
+  document.getElementById('btn-custom-graph').classList.remove('btn-outline');
+  document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pill-' + m).classList.add('active');
+
+  const bipRow = document.getElementById('bipartite-splits');
+  const kWrapp = document.getElementById('group-k-wrapper');
+
+  if (m === 'bipartite') {
+    bipRow.style.display = 'block';
+    kWrapp.style.display = 'none';
+    state.K1 = parseInt(document.getElementById('input-k1').value) || 2;
+    state.K2 = parseInt(document.getElementById('input-k2').value) || 3;
+    state.K = state.K1 + state.K2;
+  } else {
+    bipRow.style.display = 'none';
+    kWrapp.style.display = 'block';
+  }
+  updateCalculations();
+}
+
+function toggleCustomGraphMode() {
+  state.isCustomGraph = !state.isCustomGraph;
+  const p = document.getElementById('custom-matrix-panel');
+  const btn = document.getElementById('btn-custom-graph');
+  if (state.isCustomGraph) {
+    p.style.display = 'block';
+    btn.classList.add('btn-outline');
+    initCustomMatrix();
+  } else {
+    p.style.display = 'none';
+    btn.classList.remove('btn-outline');
+    setGraphModel(state.model);
+  }
+}
+
+function initCustomMatrix() {
+  const K = state.K;
+  state.customAdjMatrix = Array.from({ length: K }, () => new Array(K).fill(0));
+  // initialize with current edges
+  for (let e of state.edges) {
+    if (e[0] < K && e[1] < K) {
+      state.customAdjMatrix[e[0]][e[1]] = 1;
+      state.customAdjMatrix[e[1]][e[0]] = 1;
+    }
+  }
+  renderMatrixGrid();
+}
+
+function renderMatrixGrid() {
+  const c = document.getElementById('matrixContainer');
+  c.innerHTML = '';
+  const K = state.K;
+  c.style.gridTemplateColumns = `repeat(${K + 1}, 32px)`;
+
+  // Top header row
+  const corner = document.createElement('div');
+  corner.className = 'matrix-cell header';
+  corner.innerText = 'G';
+  c.appendChild(corner);
+  for (let j = 0; j < K; j++) {
+    const th = document.createElement('div');
+    th.className = 'matrix-cell header';
+    th.innerText = `${j + 1}`;
+    c.appendChild(th);
+  }
+
+  // Rows
+  for (let i = 0; i < K; i++) {
+    const rowH = document.createElement('div');
+    rowH.className = 'matrix-cell header';
+    rowH.innerText = `${i + 1}`;
+    c.appendChild(rowH);
+
+    for (let j = 0; j < K; j++) {
+      const cell = document.createElement('div');
+      if (i === j) {
+        cell.className = 'matrix-cell disabled';
+        cell.innerText = '-';
+      } else {
+        const isConn = state.customAdjMatrix[i][j] === 1;
+        cell.className = 'matrix-cell' + (isConn ? ' connected' : '');
+        cell.innerText = isConn ? '✓' : '';
+        cell.onclick = () => toggleEdge(i, j);
+      }
+      c.appendChild(cell);
+    }
+  }
+}
+
+function toggleEdge(i, j) {
+  const newVal = state.customAdjMatrix[i][j] === 1 ? 0 : 1;
+  state.customAdjMatrix[i][j] = newVal;
+  state.customAdjMatrix[j][i] = newVal;
+  renderMatrixGrid();
+  updateCalculations();
+}
+
+function resetCustomGraphEdges() {
+  const K = state.K;
+  state.customAdjMatrix = Array.from({ length: K }, () => new Array(K).fill(0));
+  // connect 0 to all (star tree default)
+  for (let j = 1; j < K; j++) {
+    state.customAdjMatrix[0][j] = 1;
+    state.customAdjMatrix[j][0] = 1;
+  }
+  renderMatrixGrid();
+  updateCalculations();
+}
+
+function setK(k) {
+  state.K = k;
+  state.useAgriPreset = false;
+  document.querySelectorAll('#k-chips .chip').forEach(c => {
+    c.classList.toggle('active', parseInt(c.innerText) === k);
+  });
+  if (state.isCustomGraph) initCustomMatrix();
+  updateCalculations();
+}
+
+function onNChange(val) {
+  state.N = parseInt(val);
+  document.getElementById('val-n').innerText = state.N;
+  updateCalculations();
+}
+
+function onDeltaChange(val) {
+  state.delta = parseFloat(val);
+  document.getElementById('val-delta').innerText = state.delta.toFixed(2);
+  state.useAgriPreset = false;
+  updateCalculations();
+}
+
+function setProbMode(mode) {
+  state.probMode = mode;
+  document.getElementById('chip-mode-lfc').classList.toggle('active', mode === 'lfc');
+  document.getElementById('chip-mode-custom').classList.toggle('active', mode === 'custom');
+  document.getElementById('delta-control-box').style.display = mode === 'lfc' ? 'block' : 'none';
+  updateCalculations();
+}
+
+function updateCustomTheta(idx, val) {
+  const num = Math.min(0.99, Math.max(0.01, parseFloat(val) || 0.5));
+  state.customTheta[idx] = num;
+  updateCalculations();
+}
+
+function setPresetAgri() {
+  state.model = 'tree';
+  state.isCustomGraph = false;
+  state.K = 5;
+  state.N = 480;
+  state.useAgriPreset = true;
+  state.probMode = 'custom';
+  state.theta = [0.413, 0.510, 0.617, 0.561, 0.604];
+  state.customTheta = [0.413, 0.510, 0.617, 0.561, 0.604];
+  state.groupNames = ["Untreated control", "Hydro-priming", "Bio-priming", "Fungicide dressing", "Integrated treatment"];
+  document.getElementById('range-n').value = 480;
+  document.getElementById('val-n').innerText = 480;
+  document.getElementById('custom-matrix-panel').style.display = 'none';
+  document.getElementById('btn-custom-graph').classList.remove('btn-outline');
+  document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pill-tree').classList.add('active');
+  document.querySelectorAll('#k-chips .chip').forEach(c => {
+    c.classList.toggle('active', parseInt(c.innerText) === 5);
+  });
+  setProbMode('custom');
+}
+
+function solveForTargetPower() {
+  const reqN = state.N90_MM;
+  state.N = reqN;
+  document.getElementById('range-n').value = reqN;
+  document.getElementById('val-n').innerText = reqN;
+  updateCalculations();
+  if (window.AndroidBridge && window.AndroidBridge.showToast) {
+    window.AndroidBridge.showToast("Set N to " + reqN + " for 90% power!");
+  }
+}
+
+/* ========================================================
+   GRAPH SETUP & CALCULATION ENGINE
+   ======================================================== */
+function checkGraphConnectivity(K, edges) {
+  if (edges.length < K - 1) return false;
+  const visited = new Set();
+  const queue = [0];
+  visited.add(0);
+  while (queue.length > 0) {
+    const cur = queue.shift();
+    for (let e of edges) {
+      if (e[0] === cur && !visited.has(e[1])) {
+        visited.add(e[1]);
+        queue.push(e[1]);
+      } else if (e[1] === cur && !visited.has(e[0])) {
+        visited.add(e[0]);
+        queue.push(e[0]);
+      }
+    }
+  }
+  return visited.size === K;
+}
+
+function updateCalculations() {
+  const K = state.K;
+  let edges = [];
+  let degrees = new Array(K).fill(0);
+  let xiMM = new Array(K).fill(0);
+  let xiBL = new Array(K).fill(1.0 / K);
+
+  if (state.isCustomGraph && state.customAdjMatrix.length === K) {
+    for (let i = 0; i < K; i++) {
+      for (let j = i + 1; j < K; j++) {
+        if (state.customAdjMatrix[i][j] === 1) {
+          edges.push([i, j]);
+          degrees[i]++;
+          degrees[j]++;
+        }
+      }
+    }
+  } else if (state.useAgriPreset) {
+    for (let j = 1; j < K; j++) {
+      edges.push([0, j]);
+      degrees[0]++;
+      degrees[j]++;
+    }
+  } else if (state.model === 'tree') {
+    for (let j = 1; j < K; j++) {
+      edges.push([0, j]);
+      degrees[0]++;
+      degrees[j]++;
+    }
+  } else if (state.model === 'bipartite') {
+    state.K1 = parseInt(document.getElementById('input-k1').value) || 2;
+    state.K2 = parseInt(document.getElementById('input-k2').value) || 3;
+    state.K = state.K1 + state.K2;
+    degrees = new Array(state.K).fill(0);
+    xiMM = new Array(state.K).fill(0);
+    xiBL = new Array(state.K).fill(1.0 / state.K);
+    for (let i = 0; i < state.K1; i++) {
+      for (let j = state.K1; j < state.K; j++) {
+        edges.push([i, j]);
+        degrees[i]++;
+        degrees[j]++;
+      }
+    }
+  } else if (state.model === 'path') {
+    for (let i = 0; i < K - 1; i++) {
+      edges.push([i, i + 1]);
+      degrees[i]++;
+      degrees[i + 1]++;
+    }
+  } else if (state.model === 'complete') {
+    for (let i = 0; i < K; i++) {
+      for (let j = i + 1; j < K; j++) {
+        edges.push([i, j]);
+        degrees[i]++;
+        degrees[j]++;
+      }
+    }
+  }
+
+  const P_len = Math.max(1, edges.length);
+  state.isConnected = checkGraphConnectivity(state.K, edges);
+
+  if (state.model === 'complete') {
+    xiMM = new Array(K).fill(1.0 / K);
+  } else {
+    for (let i = 0; i < state.K; i++) {
+      xiMM[i] = degrees[i] / (2.0 * P_len);
+    }
+    // fallback if disconnected node has degree 0
+    let sumXi = xiMM.reduce((a, b) => a + b, 0);
+    if (sumXi === 0) {
+      xiMM = new Array(K).fill(1.0 / K);
+    }
+  }
+
+  state.edges = edges;
+  state.degrees = degrees;
+  state.xiMM = xiMM;
+  state.xiBL = xiBL;
+
+  // Probability configuration (LFC vs Custom)
+  let theta = [];
+  if (state.probMode === 'custom') {
+    while (state.customTheta.length < state.K) state.customTheta.push(0.5);
+    theta = state.customTheta.slice(0, state.K);
+  } else {
+    if (state.model === 'bipartite') {
+      const k1 = state.K1;
+      const k2 = state.K2;
+      theta = new Array(k1).fill(0.5 - state.delta / 2.0).concat(new Array(k2).fill(0.5 + state.delta / 2.0));
+    } else if (state.model === 'tree') {
+      theta = [0.5 - state.delta / 2.0].concat(new Array(state.K - 1).fill(0.5 + state.delta / 2.0));
+    } else if (state.model === 'path') {
+      theta = [];
+      for (let i = 0; i < state.K; i++) {
+        theta.push(i % 2 === 0 ? 0.5 - state.delta / 2.0 : 0.5 + state.delta / 2.0);
+      }
+    } else {
+      theta = [0.5 - state.delta / 2.0, 0.5 + state.delta / 2.0];
+      for (let i = 2; i < state.K; i++) theta.push(0.5);
+    }
+  }
+  state.theta = theta;
+
+  // Integer group sizes
+  state.nMM = largestRemainderRound(state.N, state.xiMM);
+  state.nBL = largestRemainderRound(state.N, state.xiBL);
+
+  const df = state.K - 1;
+  state.critVal = chi2Inv(1.0 - state.alpha, df);
+
+  state.ncpMM = calcNCP(state.nMM, state.theta);
+  state.ncpBL = calcNCP(state.nBL, state.theta);
+
+  state.powerMM = purePower(state.ncpMM, df, state.alpha);
+  state.powerBL = purePower(state.ncpBL, df, state.alpha);
+
+  state.N90_MM = findSampleSize90(state.xiMM, state.theta, state.alpha, 0.90);
+  state.N90_BL = findSampleSize90(state.xiBL, state.theta, state.alpha, 0.90);
+
+  // Update UI Elements
+  document.getElementById('kpi-pow-mm').innerText = state.powerMM.toFixed(3);
+  document.getElementById('kpi-pow-bl').innerText = state.powerBL.toFixed(3);
+  document.getElementById('kpi-n-mm').innerText = state.N90_MM;
+  document.getElementById('kpi-ncp-val').innerText = state.ncpMM.toFixed(2);
+  document.getElementById('kpi-df-crit').innerText = `df: ${df} | Crit: ${state.critVal.toFixed(2)}`;
+
+  const powGain = ((state.powerMM - state.powerBL) / Math.max(0.001, state.powerBL)) * 100.0;
+  document.getElementById('kpi-pow-gain').innerText = `${powGain >= 0 ? '+' : ''}${powGain.toFixed(1)}% vs Balanced`;
+
+  const nRed = ((state.N90_BL - state.N90_MM) / Math.max(1, state.N90_BL)) * 100.0;
+  document.getElementById('kpi-n-red').innerText = `${nRed >= 0 ? '-' : ''}${Math.abs(nRed).toFixed(1)}% Unit Savings`;
+
+  const ncpGain = ((state.ncpMM - state.ncpBL) / Math.max(0.001, state.ncpBL)) * 100.0;
+  document.getElementById('kpi-ncp-gain').innerText = `+${ncpGain.toFixed(1)}% NCP Gain`;
+
+  document.getElementById('graph-meta').innerText = `Edges: ${P_len} | Rank: ${df}`;
+  const connBadge = document.getElementById('connectivity-badge');
+  if (state.isConnected) {
+    connBadge.innerText = 'Connected (Rank ' + df + ')';
+    connBadge.className = 'tag tag-mm';
+  } else {
+    connBadge.innerText = 'Disconnected (Warning)';
+    connBadge.className = 'tag tag-control';
+  }
+
+  renderAllocTable();
+  renderSensitivityMatrix();
+  renderContrastMatrix();
+  if (randomizedUnits.length === 0 || randomizedUnits.length !== state.N) { generateFieldRandomization(); }
+  renderAllVisualizations();
+}
+
+function renderAllocTable() {
+  const tbody = document.getElementById('allocTableBody');
+  tbody.innerHTML = '';
+  for (let i = 0; i < state.K; i++) {
+    const tr = document.createElement('tr');
+    let roleBadge = '<span class="tag tag-trt">Active</span>';
+    if (state.model === 'tree' && i === 0) roleBadge = '<span class="tag tag-control">Control</span>';
+    else if (state.model === 'bipartite' && i < state.K1) roleBadge = '<span class="tag tag-control">Ref/Ctrl</span>';
+
+    const diff = state.nMM[i] - state.nBL[i];
+    const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
+    const diffColor = diff > 0 ? 'var(--primary-light)' : (diff < 0 ? 'var(--danger)' : '#cbd5e1');
+
+    const rateHtml = state.probMode === 'custom' 
+      ? `<input type="number" step="0.01" min="0.01" max="0.99" value="${state.theta[i].toFixed(3)}" style="width:68px; background:#071911; border:1px solid var(--border); color:#a7f3d0; border-radius:4px; padding:2px 4px; font-size:11px;" onchange="updateCustomTheta(${i}, this.value)"/>`
+      : state.theta[i].toFixed(3);
+
+    tr.innerHTML = `
+      <td><strong>${i + 1}</strong>: ${state.useAgriPreset && state.groupNames[i] ? state.groupNames[i] : 'Group ' + (i+1)}</td>
+      <td>${roleBadge}</td>
+      <td><strong>${state.degrees[i]}</strong></td>
+      <td>${(state.xiMM[i] * 100).toFixed(1)}%</td>
+      <td><strong style="color:var(--primary-light); font-size:13px;">${state.nMM[i]}</strong></td>
+      <td style="color:#94a3b8;">${state.nBL[i]}</td>
+      <td style="color:${diffColor}; font-weight:700;">${diffStr}</td>
+      <td>${rateHtml}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+
+/* ========================================================
+   CANVAS RENDERING & VISUALIZATIONS
+   ======================================================== */
+function renderAllVisualizations() {
+  drawGraphCanvas();
+  drawBarCanvas();
+  drawPowerCurveCanvas();
+}
+
+function drawGraphCanvas() {
+  const cvs = document.getElementById('graphCanvas');
+  if (!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = cvs.getBoundingClientRect();
+  cvs.width = rect.width * dpr;
+  cvs.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width;
+  const h = rect.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const K = state.K;
+  const coords = [];
+
+  if (state.model === 'tree' && !state.isCustomGraph) {
+    coords.push({ x: w * 0.22, y: h * 0.5, label: "1 (C)", isCtrl: true });
+    const nTrt = K - 1;
+    for (let i = 1; i < K; i++) {
+      const y = h * 0.2 + ((h * 0.6) / Math.max(1, nTrt - 1)) * (i - 1);
+      coords.push({ x: w * 0.78, y: y, label: `${i + 1}`, isCtrl: false });
+    }
+  } else if (state.model === 'bipartite' && !state.isCustomGraph) {
+    const k1 = state.K1;
+    const k2 = state.K2;
+    for (let i = 0; i < k1; i++) {
+      const y = h * 0.25 + ((h * 0.5) / Math.max(1, k1 - 1)) * i;
+      coords.push({ x: w * 0.25, y: y, label: `C${i + 1}`, isCtrl: true });
+    }
+    for (let j = 0; j < k2; j++) {
+      const y = h * 0.18 + ((h * 0.64) / Math.max(1, k2 - 1)) * j;
+      coords.push({ x: w * 0.75, y: y, label: `T${j + 1}`, isCtrl: false });
+    }
+  } else {
+    const cx = w * 0.5;
+    const cy = h * 0.5;
+    const r = Math.min(w, h) * 0.36;
+    for (let i = 0; i < K; i++) {
+      const angle = (2 * Math.PI / K) * i - Math.PI / 2;
+      coords.push({
+        x: cx + r * Math.cos(angle),
+        y: cy + r * Math.sin(angle),
+        label: `${i + 1}`,
+        isCtrl: i === 0
+      });
+    }
+  }
+
+  // Draw Edges
+  ctx.lineWidth = 2.0;
+  ctx.strokeStyle = "rgba(52, 211, 153, 0.45)";
+  for (let e of state.edges) {
+    if (coords[e[0]] && coords[e[1]]) {
+      const c1 = coords[e[0]];
+      const c2 = coords[e[1]];
+      ctx.beginPath();
+      ctx.moveTo(c1.x, c1.y);
+      ctx.lineTo(c2.x, c2.y);
+      ctx.stroke();
+    }
+  }
+
+  // Draw Nodes
+  for (let i = 0; i < coords.length; i++) {
+    const c = coords[i];
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, 16, 0, 2 * Math.PI);
+    ctx.fillStyle = c.isCtrl ? "#f59e0b" : "#10b981";
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#fff";
+    ctx.stroke();
+
+    ctx.fillStyle = "#08120e";
+    ctx.font = "bold 11px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(c.label, c.x, c.y);
+
+    ctx.fillStyle = "#a7f3d0";
+    ctx.font = "10px sans-serif";
+    ctx.fillText(`d=${state.degrees[i]}`, c.x, c.y - 23);
+  }
+}
+
+function drawBarCanvas() {
+  const cvs = document.getElementById('barCanvas');
+  if (!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = cvs.getBoundingClientRect();
+  cvs.width = rect.width * dpr;
+  cvs.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width;
+  const h = rect.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const K = state.K;
+  const maxN = Math.max(...state.nMM, ...state.nBL, 1);
+  const chartH = h - 45;
+  const groupW = (w - 50) / K;
+  const barW = Math.min(22, (groupW - 10) / 2);
+
+  ctx.strokeStyle = "rgba(255,255,255,0.15)";
+  ctx.beginPath();
+  ctx.moveTo(35, chartH);
+  ctx.lineTo(w - 10, chartH);
+  ctx.stroke();
+
+  ctx.fillStyle = "#10b981";
+  ctx.fillRect(w - 140, 10, 12, 10);
+  ctx.fillStyle = "#cbd5e1";
+  ctx.font = "10px sans-serif";
+  ctx.fillText("Max-Min (nMM)", w - 122, 18);
+
+  ctx.fillStyle = "#64748b";
+  ctx.fillRect(w - 60, 10, 12, 10);
+  ctx.fillText("Balanced", w - 42, 18);
+
+  for (let i = 0; i < K; i++) {
+    const gx = 40 + i * groupW + groupW / 2;
+
+    const hMM = (state.nMM[i] / maxN) * (chartH - 25);
+    ctx.fillStyle = "#10b981";
+    ctx.fillRect(gx - barW - 2, chartH - hMM, barW, hMM);
+
+    const hBL = (state.nBL[i] / maxN) * (chartH - 25);
+    ctx.fillStyle = "#64748b";
+    ctx.fillRect(gx + 2, chartH - hBL, barW, hBL);
+
+    ctx.fillStyle = "#34d399";
+    ctx.font = "bold 10px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`${state.nMM[i]}`, gx - barW / 2 - 2, chartH - hMM - 4);
+
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "10px sans-serif";
+    ctx.fillText(`G${i + 1}`, gx, chartH + 16);
+  }
+}
+
+function drawPowerCurveCanvas() {
+  const cvs = document.getElementById('curveCanvas');
+  if (!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = cvs.getBoundingClientRect();
+  cvs.width = rect.width * dpr;
+  cvs.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width;
+  const h = rect.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const padLeft = 40;
+  const padRight = 15;
+  const padTop = 20;
+  const padBottom = 30;
+  const plotW = w - padLeft - padRight;
+  const plotH = h - padTop - padBottom;
+
+  ctx.strokeStyle = "rgba(255,255,255,0.08)";
+  ctx.fillStyle = "#64748b";
+  ctx.font = "9px sans-serif";
+  ctx.textAlign = "right";
+
+  for (let p = 0.2; p <= 1.0; p += 0.2) {
+    const y = padTop + plotH * (1.0 - p);
+    ctx.beginPath();
+    ctx.moveTo(padLeft, y);
+    ctx.lineTo(w - padRight, y);
+    ctx.stroke();
+    ctx.fillText((p * 100).toFixed(0) + "%", padLeft - 6, y + 3);
+  }
+
+  const y90 = padTop + plotH * (1.0 - 0.90);
+  ctx.strokeStyle = "rgba(245, 158, 11, 0.7)";
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(padLeft, y90);
+  ctx.lineTo(w - padRight, y90);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#f59e0b";
+  ctx.textAlign = "left";
+  ctx.fillText("90% Target", padLeft + 6, y90 - 4);
+
+  const nSteps = 30;
+  const df = state.K - 1;
+  const maxN = 600;
+  const ptsMM = [];
+  const ptsBL = [];
+
+  for (let i = 0; i <= nSteps; i++) {
+    const curN = 20 + Math.round((maxN - 20) * (i / nSteps));
+    const n_mm = largestRemainderRound(curN, state.xiMM);
+    const n_bl = largestRemainderRound(curN, state.xiBL);
+    const powMM = purePower(calcNCP(n_mm, state.theta), df, state.alpha);
+    const powBL = purePower(calcNCP(n_bl, state.theta), df, state.alpha);
+
+    const x = padLeft + (i / nSteps) * plotW;
+    const yMM = padTop + (1.0 - powMM) * plotH;
+    const yBL = padTop + (1.0 - powBL) * plotH;
+    ptsMM.push({ x, y: yMM });
+    ptsBL.push({ x, y: yBL });
+  }
+
+  ctx.strokeStyle = "#64748b";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(ptsBL[0].x, ptsBL[0].y);
+  for (let p of ptsBL) ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+
+  ctx.strokeStyle = "#10b981";
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(ptsMM[0].x, ptsMM[0].y);
+  for (let p of ptsMM) ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+
+  const curFrac = Math.min(1.0, Math.max(0.0, (state.N - 20) / (maxN - 20)));
+  const curX = padLeft + curFrac * plotW;
+  const curYMM = padTop + (1.0 - state.powerMM) * plotH;
+
+  ctx.beginPath();
+  ctx.arc(curX, curYMM, 5, 0, 2 * Math.PI);
+  ctx.fillStyle = "#34d399";
+  ctx.fill();
+  ctx.strokeStyle = "#fff";
+  ctx.stroke();
+
+  ctx.fillStyle = "#94a3b8";
+  ctx.textAlign = "center";
+  ctx.fillText("Total Sample Size (N)", padLeft + plotW / 2, h - 8);
+}
+
+/* ========================================================
+   TAB 2: AGRICULTURAL CASE STUDY ENGINE
+   ======================================================== */
+const agriData = {
+  theta: [0.413, 0.510, 0.617, 0.561, 0.604],
+  N: 480,
+  graphs: {
+    'a': {
+      name: "Graph (a): Control vs Treatments",
+      edges: [[0,1], [0,2], [0,3], [0,4]],
+      degrees: [4, 1, 1, 1, 1],
+      powerMM: 0.880,
+      powerBL: 0.761,
+      powerAC: 0.747,
+      nMM: [240, 60, 60, 60, 60],
+      N90: 510,
+      redBL: "24.44%",
+      redAC: "26.41%"
+    },
+    'b': {
+      name: "Graph (b): Dual Reference (Bio-priming)",
+      edges: [[0,2], [0,3], [0,4], [1,2]],
+      degrees: [3, 1, 2, 1, 1],
+      powerMM: 0.902,
+      powerBL: 0.761,
+      powerAC: 0.747,
+      nMM: [180, 60, 120, 60, 60],
+      N90: 479,
+      redBL: "29.04%",
+      redAC: "30.88%"
+    },
+    'c': {
+      name: "Graph (c): Cross Reference (Bio + Fungicide)",
+      edges: [[0,2], [0,3], [0,4], [1,2], [1,3]],
+      degrees: [3, 2, 2, 2, 1],
+      powerMM: 0.828,
+      powerBL: 0.761,
+      powerAC: 0.747,
+      nMM: [144, 96, 96, 96, 48],
+      N90: 581,
+      redBL: "13.93%",
+      redAC: "16.16%"
+    },
+    'd': {
+      name: "Graph (d): Complete Bipartite {1,2} vs {3,4,5}",
+      edges: [[0,2], [0,3], [0,4], [1,2], [1,3], [1,4]],
+      degrees: [3, 3, 2, 2, 2],
+      powerMM: 0.790,
+      powerBL: 0.761,
+      powerAC: 0.747,
+      nMM: [120, 120, 80, 80, 80],
+      N90: 634,
+      redBL: "6.07%",
+      redAC: "8.51%"
+    }
+  }
+};
+
+function setAgriGraph(g) {
+  state.agriGraph = g;
+  document.querySelectorAll('#tab-agricultural .pill-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('agri-pill-' + g).classList.add('active');
+
+  document.querySelectorAll('#tab-agricultural tbody tr').forEach(r => r.classList.remove('highlight'));
+  document.getElementById('agri-row-' + g).classList.add('highlight');
+
+  renderAgriTab();
+}
+
+function renderAgriTab() {
+  drawAgriGraph();
+  drawAgriBar();
+}
+
+function drawAgriGraph() {
+  const cvs = document.getElementById('agriGraphCanvas');
+  if (!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = cvs.getBoundingClientRect();
+  cvs.width = rect.width * dpr;
+  cvs.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width;
+  const h = rect.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const g = agriData.graphs[state.agriGraph];
+  const coords = [
+    { x: w * 0.22, y: h * 0.38, label: "1: Control", isCtrl: true },
+    { x: w * 0.22, y: h * 0.74, label: "2: Hydro", isCtrl: true },
+    { x: w * 0.78, y: h * 0.22, label: "3: Bio", isCtrl: false },
+    { x: w * 0.78, y: h * 0.50, label: "4: Fungi", isCtrl: false },
+    { x: w * 0.78, y: h * 0.78, label: "5: Integ", isCtrl: false }
+  ];
+
+  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = "#34d399";
+  for (let e of g.edges) {
+    ctx.beginPath();
+    ctx.moveTo(coords[e[0]].x, coords[e[0]].y);
+    ctx.lineTo(coords[e[1]].x, coords[e[1]].y);
+    ctx.stroke();
+  }
+
+  for (let i = 0; i < coords.length; i++) {
+    const c = coords[i];
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, 18, 0, 2 * Math.PI);
+    ctx.fillStyle = c.isCtrl ? "#f59e0b" : "#10b981";
+    ctx.fill();
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = "#08120e";
+    ctx.font = "bold 11px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`${i + 1}`, c.x, c.y);
+
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "11px sans-serif";
+    if (c.isCtrl) {
+      ctx.textAlign = "right";
+      ctx.fillText(c.label, c.x - 24, c.y);
+      ctx.fillStyle = "#34d399";
+      ctx.font = "bold 10px sans-serif";
+      ctx.fillText(`n=${g.nMM[i]}`, c.x - 24, c.y + 14);
+    } else {
+      ctx.textAlign = "left";
+      ctx.fillText(c.label, c.x + 24, c.y);
+      ctx.fillStyle = "#34d399";
+      ctx.font = "bold 10px sans-serif";
+      ctx.fillText(`n=${g.nMM[i]}`, c.x + 24, c.y + 14);
+    }
+  }
+}
+
+function drawAgriBar() {
+  const cvs = document.getElementById('agriBarCanvas');
+  if (!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = cvs.getBoundingClientRect();
+  cvs.width = rect.width * dpr;
+  cvs.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width;
+  const h = rect.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const graphs = ['a', 'b', 'c', 'd'];
+  const padLeft = 40;
+  const padBottom = 25;
+  const plotW = w - padLeft - 10;
+  const plotH = h - 35 - padBottom;
+  const minP = 0.60;
+  const maxP = 1.00;
+
+  const y90 = 35 + plotH * ((maxP - 0.90) / (maxP - minP));
+  ctx.strokeStyle = "#38bdf8";
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(padLeft, y90);
+  ctx.lineTo(w - 10, y90);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "10px sans-serif";
+  ctx.fillText("90% target", padLeft + 4, y90 - 4);
+
+  const groupW = plotW / 4;
+  const barW = Math.min(16, (groupW - 12) / 3);
+
+  for (let idx = 0; idx < graphs.length; idx++) {
+    const key = graphs[idx];
+    const d = agriData.graphs[key];
+    const gx = padLeft + idx * groupW + groupW / 2;
+
+    const hBL = plotH * ((d.powerBL - minP) / (maxP - minP));
+    ctx.fillStyle = "#0284c7";
+    ctx.fillRect(gx - barW * 1.5 - 2, 35 + (plotH - hBL), barW, hBL);
+
+    const hAC = plotH * ((d.powerAC - minP) / (maxP - minP));
+    ctx.fillStyle = "#ea580c";
+    ctx.fillRect(gx - barW * 0.5, 35 + (plotH - hAC), barW, hAC);
+
+    const hMM = plotH * ((d.powerMM - minP) / (maxP - minP));
+    ctx.fillStyle = key === state.agriGraph ? "#10b981" : "#059669";
+    ctx.fillRect(gx + barW * 0.5 + 2, 35 + (plotH - hMM), barW, hMM);
+
+    ctx.fillStyle = "#34d399";
+    ctx.font = "bold 9px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`${(d.powerMM * 100).toFixed(1)}%`, gx + barW, 35 + (plotH - hMM) - 4);
+
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "bold 11px sans-serif";
+    ctx.fillText(`(${key})`, gx, h - 8);
+  }
+}
+
+/* ========================================================
+   TAB 3: SIMULATION STUDY ENGINE (TABLE 1 REPLICATION)
+   ======================================================== */
+const simRows = [
+  { type: "Tree", k1: 1, k2: 4, label: "Tree (1,4)", d30: { pBL: 0.257, pMM: 0.392, gain: "52.8%", ncp: "56.2%", nBL: 241, nMM: 156, red: "35.3%" }, d40: { pBL: 0.477, pMM: 0.692, gain: "45.0%", ncp: "56.2%", nBL: 126, nMM: 81, red: "35.7%" }, d50: { pBL: 0.747, pMM: 0.924, gain: "23.6%", ncp: "56.2%", nBL: 71, nMM: 47, red: "33.8%" } },
+  { type: "Tree", k1: 1, k2: 5, label: "Tree (1,5)", d30: { pBL: 0.217, pMM: 0.359, gain: "65.4%", ncp: "80.0%", nBL: 299, nMM: 167, red: "44.1%" }, d40: { pBL: 0.407, pMM: 0.652, gain: "60.5%", ncp: "80.0%", nBL: 155, nMM: 87, red: "43.9%" }, d50: { pBL: 0.669, pMM: 0.904, gain: "35.1%", ncp: "80.0%", nBL: 85, nMM: 50, red: "41.2%" } },
+  { type: "Tree", k1: 1, k2: 6, label: "Tree (1,6)", d30: { pBL: 0.185, pMM: 0.332, gain: "79.9%", ncp: "104.2%", nBL: 358, nMM: 177, red: "50.6%" }, d40: { pBL: 0.344, pMM: 0.619, gain: "79.7%", ncp: "104.2%", nBL: 183, nMM: 92, red: "49.7%" }, d50: { pBL: 0.587, pMM: 0.885, gain: "50.6%", ncp: "104.2%", nBL: 106, nMM: 53, red: "50.0%" } },
+  { type: "Complete bip.", k1: 2, k2: 3, label: "Bip. (2,3)", d30: { pBL: 0.377, pMM: 0.391, gain: "3.8%", ncp: "4.2%", nBL: 162, nMM: 156, red: "3.7%" }, d40: { pBL: 0.671, pMM: 0.691, gain: "2.9%", ncp: "4.2%", nBL: 84, nMM: 81, red: "3.6%" }, d50: { pBL: 0.912, pMM: 0.923, gain: "1.2%", ncp: "4.2%", nBL: 48, nMM: 47, red: "2.1%" } },
+  { type: "Complete bip.", k1: 2, k2: 4, label: "Bip. (2,4)", d30: { pBL: 0.331, pMM: 0.358, gain: "8.1%", ncp: "12.5%", nBL: 187, nMM: 167, red: "10.7%" }, d40: { pBL: 0.611, pMM: 0.652, gain: "6.7%", ncp: "12.5%", nBL: 97, nMM: 87, red: "10.3%" }, d50: { pBL: 0.875, pMM: 0.903, gain: "3.2%", ncp: "12.5%", nBL: 55, nMM: 50, red: "9.1%" } },
+  { type: "Complete bip.", k1: 2, k2: 5, label: "Bip. (2,5)", d30: { pBL: 0.280, pMM: 0.332, gain: "18.8%", ncp: "22.5%", nBL: 214, nMM: 177, red: "17.3%" }, d40: { pBL: 0.531, pMM: 0.619, gain: "16.6%", ncp: "22.5%", nBL: 113, nMM: 92, red: "18.6%" }, d50: { pBL: 0.813, pMM: 0.885, gain: "8.9%", ncp: "22.5%", nBL: 64, nMM: 53, red: "17.2%" } }
+];
+
+function setSimDelta(d) {
+  state.simDelta = d;
+  document.querySelectorAll('#tab-simulation .chip').forEach(c => c.classList.remove('active'));
+  if (d === 0.30) document.getElementById('sim-d30').classList.add('active');
+  if (d === 0.40) document.getElementById('sim-d40').classList.add('active');
+  if (d === 0.50) document.getElementById('sim-d50').classList.add('active');
+  renderSimulationTab();
+}
+
+function renderSimulationTab() {
+  const dKey = state.simDelta === 0.30 ? 'd30' : (state.simDelta === 0.40 ? 'd40' : 'd50');
+
+  const tbody1A = document.getElementById('simTable1ABody');
+  tbody1A.innerHTML = '';
+  for (let r of simRows) {
+    const val = r[dKey];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.type}</td>
+      <td><strong>${r.k1}, ${r.k2}</strong></td>
+      <td>${val.pBL.toFixed(3)}</td>
+      <td><strong style="color:var(--primary-light);">${val.pMM.toFixed(3)}</strong></td>
+      <td style="color:var(--success); font-weight:700;">+${val.gain}</td>
+      <td style="color:var(--accent-gold); font-weight:700;">+${val.ncp}</td>
+    `;
+    tbody1A.appendChild(tr);
+  }
+
+  const tbody1B = document.getElementById('simTable1BBody');
+  tbody1B.innerHTML = '';
+  for (let r of simRows) {
+    const val = r[dKey];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.type}</td>
+      <td><strong>${r.k1}, ${r.k2}</strong></td>
+      <td>${val.nBL}</td>
+      <td><strong style="color:var(--primary-light); font-size:13px;">${val.nMM}</strong></td>
+      <td style="color:var(--accent-orange); font-weight:700;">-${val.red}</td>
+    `;
+    tbody1B.appendChild(tr);
+  }
+
+  drawSimBarChart(dKey);
+}
+
+function drawSimBarChart(dKey) {
+  const cvs = document.getElementById('simBarCanvas');
+  if (!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = cvs.getBoundingClientRect();
+  cvs.width = rect.width * dpr;
+  cvs.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width;
+  const h = rect.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const padLeft = 35;
+  const padBottom = 40;
+  const plotW = w - padLeft - 10;
+  const plotH = h - 30 - padBottom;
+  const maxPct = 90.0;
+
+  ctx.fillStyle = "#0284c7";
+  ctx.fillRect(w - 170, 8, 12, 10);
+  ctx.fillStyle = "#cbd5e1";
+  ctx.font = "10px sans-serif";
+  ctx.fillText("Power gain", w - 152, 16);
+
+  ctx.fillStyle = "#ea580c";
+  ctx.fillRect(w - 90, 8, 12, 10);
+  ctx.fillText("Sample-size red.", w - 72, 16);
+
+  ctx.strokeStyle = "rgba(255,255,255,0.08)";
+  ctx.fillStyle = "#64748b";
+  ctx.font = "9px sans-serif";
+  ctx.textAlign = "right";
+  for (let pct = 0; pct <= 80; pct += 20) {
+    const y = 30 + plotH * (1.0 - pct / maxPct);
+    ctx.beginPath();
+    ctx.moveTo(padLeft, y);
+    ctx.lineTo(w - 10, y);
+    ctx.stroke();
+    ctx.fillText(`${pct}%`, padLeft - 5, y + 3);
+  }
+
+  const groupW = plotW / simRows.length;
+  const barW = Math.min(18, (groupW - 10) / 2);
+
+  for (let i = 0; i < simRows.length; i++) {
+    const r = simRows[i];
+    const val = r[dKey];
+    const pGain = parseFloat(val.gain);
+    const nRed = parseFloat(val.red);
+    const gx = padLeft + i * groupW + groupW / 2;
+
+    const hPG = (pGain / maxPct) * plotH;
+    ctx.fillStyle = "#0284c7";
+    ctx.fillRect(gx - barW - 1, 30 + (plotH - hPG), barW, hPG);
+
+    const hNR = (nRed / maxPct) * plotH;
+    ctx.fillStyle = "#ea580c";
+    ctx.fillRect(gx + 1, 30 + (plotH - hNR), barW, hNR);
+
+    ctx.save();
+    ctx.translate(gx, h - padBottom + 12);
+    ctx.rotate(-0.35);
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "10px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText(r.label, 0, 0);
+    ctx.restore();
+  }
+}
+
+/* ========================================================
+   TAB 5: EXPORT & PROTOCOL GENERATION
+   ======================================================== */
+function generateReportText() {
+  const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const modelName = state.useAgriPreset ? "Agricultural Seedling-Emergence Trial" : (state.isCustomGraph ? "Custom Comparison Graph" : state.model.toUpperCase() + " Graph Model");
+
+  let p = `========================================================\n`;
+  p += `EXPERIMENTAL DESIGN PROTOCOL & POWER ANALYSIS REPORT\n`;
+  p += `Max-Min Allocation for Binary Treatment Comparisons\n`;
+  p += `========================================================\n\n`;
+  p += `Date: ${dateStr}\n`;
+  p += `Principal Investigator: Lunganlung P G, Ph.D. Scholar (Roll: 13173)\n`;
+  p += `Institution: ICAR-Indian Agricultural Statistics Research Institute, New Delhi\n`;
+  p += `Theoretical Reference: Singh & Davidov (2026), JSPI, 243, 106379\n\n`;
+
+  p += `[1] EXPERIMENT SPECIFICATIONS\n`;
+  p += `--------------------------------------------------------\n`;
+  p += `Model Topology: ${modelName}\n`;
+  p += `Number of Groups (K): ${state.K}\n`;
+  p += `Total Experimental Units (N): ${state.N}\n`;
+  p += `Number of Contrast Edges (|P|): ${state.edges.length}\n`;
+  p += `Degrees of Freedom: ${state.K - 1}\n`;
+  p += `Significance Level (alpha): ${state.alpha}\n`;
+  p += `Critical Value (chi^2_{K-1, 0.95}): ${state.critVal.toFixed(3)}\n\n`;
+
+  p += `[2] OPTIMAL ALLOCATION & GROUP SIZES\n`;
+  p += `--------------------------------------------------------\n`;
+  p += `Grp | Treatment Name        | Deg |  Prop (xi) | n(MM) | n(BL) | Rate(theta)\n`;
+  p += `----+-----------------------+-----+------------+-------+-------+------------\n`;
+  for (let i = 0; i < state.K; i++) {
+    const name = state.useAgriPreset && state.groupNames[i] ? state.groupNames[i] : `Group ${i + 1}`;
+    const namePad = name.padEnd(21, ' ').substring(0, 21);
+    const degStr = String(state.degrees[i]).padStart(3, ' ');
+    const xiStr = (state.xiMM[i] * 100).toFixed(1).padStart(6, ' ') + '%';
+    const nMMStr = String(state.nMM[i]).padStart(5, ' ');
+    const nBLStr = String(state.nBL[i]).padStart(5, ' ');
+    const thStr = state.theta[i].toFixed(3).padStart(10, ' ');
+    p += `${String(i + 1).padStart(2, ' ')}  | ${namePad} | ${degStr} | ${xiStr}   | ${nMMStr} | ${nBLStr} | ${thStr}\n`;
+  }
+  p += `----+-----------------------+-----+------------+-------+-------+------------\n`;
+  p += `SUM | TOTAL SAMPLE SIZE     |  -- |    100.0%  | ${String(state.N).padStart(5, ' ')} | ${String(state.N).padStart(5, ' ')} |\n\n`;
+
+  p += `[3] POWER & EFFICIENCY EVALUATION\n`;
+  p += `--------------------------------------------------------\n`;
+  p += `Max-Min Design Power (pi_MM):    ${state.powerMM.toFixed(4)} (${(state.powerMM * 100).toFixed(1)}%)\n`;
+  p += `Balanced Design Power (pi_BL):   ${state.powerBL.toFixed(4)} (${(state.powerBL * 100).toFixed(1)}%)\n`;
+  const gain = ((state.powerMM - state.powerBL) / Math.max(0.001, state.powerBL)) * 100.0;
+  p += `Relative Power Gain:             +${gain.toFixed(2)}%\n`;
+  p += `Non-Centrality Parameter (phi):  ${state.ncpMM.toFixed(3)} (vs BL: ${state.ncpBL.toFixed(3)})\n`;
+  p += `Sample Size for 90% Power (MM):  ${state.N90_MM} units\n`;
+  p += `Sample Size for 90% Power (BL):  ${state.N90_BL} units\n`;
+  const red = ((state.N90_BL - state.N90_MM) / Math.max(1, state.N90_BL)) * 100.0;
+  p += `Experimental Unit Savings:       ${red.toFixed(2)}% reduction in required units\n\n`;
+
+  p += `========================================================\n`;
+  p += `Generated via MaxMin Design Android Application\n`;
+  p += `ICAR-IASRI, Library Avenue, Pusa, New Delhi 110012\n`;
+
+  return p;
+}
+
+function generateReport() {
+  document.getElementById('reportText').value = generateReportText();
+}
+
+function shareProtocol() {
+  const text = generateReportText();
+  if (window.AndroidBridge && window.AndroidBridge.shareText) {
+    window.AndroidBridge.shareText("MaxMin Design Trial Protocol", text);
+  } else {
+    copyProtocol();
+  }
+}
+
+function copyProtocol() {
+  const text = generateReportText();
+  if (window.AndroidBridge && window.AndroidBridge.copyText) {
+    window.AndroidBridge.copyText(text);
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Protocol copied to clipboard!");
+    }).catch(() => {
+      alert("Select all and copy manually from text area.");
+    });
+  }
+}
+
+function saveReportToDownloads() {
+  const text = generateReportText();
+  const filename = `MaxMin_Protocol_N${state.N}.txt`;
+  if (window.AndroidBridge && window.AndroidBridge.saveFile) {
+    window.AndroidBridge.saveFile(filename, text, "text/plain");
+  } else {
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  }
+}
+
+function saveCSVToDownloads() {
+  let csv = "Group,Treatment_Name,Degree,Xi_MM,N_MM,N_BL,Theta\n";
+  for (let i = 0; i < state.K; i++) {
+    const name = state.useAgriPreset && state.groupNames[i] ? state.groupNames[i] : `Group ${i + 1}`;
+    csv += `${i + 1},"${name}",${state.degrees[i]},${state.xiMM[i]},${state.nMM[i]},${state.nBL[i]},${state.theta[i]}\n`;
+  }
+  const filename = `MaxMin_Design_N${state.N}.csv`;
+  if (window.AndroidBridge && window.AndroidBridge.saveFile) {
+    window.AndroidBridge.saveFile(filename, csv, "text/csv");
+  } else {
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  }
+}
+
+function printProtocol() {
+  if (window.AndroidBridge && window.AndroidBridge.printDocument) {
+    window.AndroidBridge.printDocument();
+  } else {
+    window.print();
+  }
+}
+
+// Initial Boot
+window.addEventListener('DOMContentLoaded', () => {
+  setPresetAgri();
+  window.addEventListener('resize', () => {
+    renderAllVisualizations();
+    if (document.getElementById('tab-agricultural').classList.contains('active')) {
+      renderAgriTab();
+    }
+  });
+});
+
+/* ========================================================
+   SENSITIVITY ANALYSIS & FIELD RANDOMIZATION EXTENSIONS
+   ======================================================== */
+let randomizedUnits = [];
+
+function renderSensitivityMatrix() {
+  const tbody = document.getElementById('sensTableBody');
+  if (!tbody) return;
+  document.getElementById('sens-n-display').innerText = state.N;
+  tbody.innerHTML = '';
+
+  const ctrlRates = [0.20, 0.30, 0.40, 0.50, 0.60];
+  const deltaVals = [0.15, 0.25, 0.35, 0.45];
+  const df = state.K - 1;
+
+  for (let cRate of ctrlRates) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td style="text-align:left; font-weight:700; color:#e2e8f0;">θ_c = ${cRate.toFixed(2)}</td>`;
+
+    for (let dVal of deltaVals) {
+      // Build hypothetical theta vector
+      const thVec = [cRate];
+      for (let j = 1; j < state.K; j++) {
+        thVec.push(Math.min(0.98, Math.max(0.02, cRate + dVal)));
+      }
+      const phi = calcNCP(state.nMM, thVec);
+      const pow = purePower(phi, df, state.alpha);
+
+      let color = "#f87171";
+      if (pow >= 0.90) color = "#10b981";
+      else if (pow >= 0.80) color = "#34d399";
+      else if (pow >= 0.70) color = "#f59e0b";
+
+      tr.innerHTML += `<td style="color:${color}; font-weight:700; cursor:pointer;" onclick="applySensitivityParams(${cRate}, ${dVal})">${(pow * 100).toFixed(1)}%</td>`;
+    }
+    tbody.appendChild(tr);
+  }
+}
+
+function applySensitivityParams(cRate, dVal) {
+  state.probMode = 'custom';
+  state.customTheta = [cRate];
+  for (let j = 1; j < state.K; j++) {
+    state.customTheta.push(Math.min(0.98, Math.max(0.02, cRate + dVal)));
+  }
+  setProbMode('custom');
+  if (window.AndroidBridge && window.AndroidBridge.showToast) {
+    window.AndroidBridge.showToast(`Applied θ_c = ${cRate.toFixed(2)}, δ = ${dVal.toFixed(2)}`);
+  }
+}
+
+function generateFieldRandomization() {
+  const units = [];
+  let unitId = 1;
+  for (let i = 0; i < state.K; i++) {
+    const count = state.nMM[i];
+    const name = state.useAgriPreset && state.groupNames[i] ? state.groupNames[i] : `Group ${i + 1}`;
+    const role = (i === 0 && state.model === 'tree') || (i < state.K1 && state.model === 'bipartite') ? "Control/Ref" : "Active Treatment";
+    for (let k = 0; k < count; k++) {
+      units.push({
+        id: unitId++,
+        groupIndex: i + 1,
+        name: name,
+        role: role
+      });
+    }
+  }
+
+  // Fisher-Yates Shuffle
+  for (let i = units.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = units[i];
+    units[i] = units[j];
+    units[j] = temp;
+  }
+
+  // Assign plot/cell numbers 1..N sequentially to randomized units
+  units.forEach((u, idx) => {
+    u.plot = idx + 1;
+  });
+
+  randomizedUnits = units;
+  renderRandomizerTable(units);
+}
+
+function renderRandomizerTable(units) {
+  const tbody = document.getElementById('randomizerTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  const displayUnits = units.slice(0, 150); // display first 150 for smooth scrolling
+  for (let u of displayUnits) {
+    const tr = document.createElement('tr');
+    const roleBadge = u.role.includes("Control") 
+      ? '<span class="tag tag-control">Control</span>' 
+      : '<span class="tag tag-trt">Treatment</span>';
+    tr.innerHTML = `
+      <td><strong>#${u.id}</strong></td>
+      <td>Plot ${u.plot}</td>
+      <td><strong>G${u.groupIndex}</strong></td>
+      <td>${u.name}</td>
+      <td>${roleBadge}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+  if (units.length > 150) {
+    const noteRow = document.createElement('tr');
+    noteRow.innerHTML = `<td colspan="5" style="text-align:center; color:var(--text-muted); font-style:italic;">Showing first 150 of ${units.length} units. Download CSV for full allocation list.</td>`;
+    tbody.appendChild(noteRow);
+  }
+}
+
+function filterRandomizationTable(query) {
+  if (!query) {
+    renderRandomizerTable(randomizedUnits);
+    return;
+  }
+  const q = query.toLowerCase();
+  const filtered = randomizedUnits.filter(u => 
+    u.name.toLowerCase().includes(q) || 
+    String(u.id).includes(q) || 
+    String(u.plot).includes(q) ||
+    `g${u.groupIndex}`.includes(q)
+  );
+  renderRandomizerTable(filtered);
+}
+
+function saveRandomizationCSV() {
+  if (!randomizedUnits || randomizedUnits.length === 0) generateFieldRandomization();
+  let csv = "Unit_ID,Plot_Number,Group_Index,Treatment_Name,Role\n";
+  for (let u of randomizedUnits) {
+    csv += `${u.id},${u.plot},${u.groupIndex},"${u.name}","${u.role}"\n`;
+  }
+  const filename = `Field_Randomization_N${state.N}.csv`;
+  if (window.AndroidBridge && window.AndroidBridge.saveFile) {
+    window.AndroidBridge.saveFile(filename, csv, "text/csv");
+  } else {
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  }
+}
+
+function renderContrastMatrix() {
+  const el = document.getElementById('contrastMatrixView');
+  if (!el) return;
+  const K = state.K;
+  let text = `Number of Groups K = ${K} | Rank of R = ${K - 1}\n\n`;
+  text += `Linearly Independent Contrast Basis R ((K-1) x K):\n`;
+  for (let i = 0; i < K - 1; i++) {
+    const row = new Array(K).fill("  0");
+    row[i] = " +1";
+    row[K - 1] = " -1";
+    text += `  Row ${i + 1} (G${i + 1} - G${K}): [${row.join(',')}]\n`;
+  }
+
+  text += `\nInverse-Variance Weights w_j = n_j / [θ_j(1 - θ_j)]:\n`;
+  let sumW = 0;
+  for (let j = 0; j < K; j++) {
+    const th = Math.min(0.999, Math.max(0.001, state.theta[j]));
+    const w = state.nMM[j] / (th * (1.0 - th));
+    sumW += w;
+    text += `  Group ${j + 1}: n=${state.nMM[j]}, θ=${th.toFixed(3)}  =>  w_${j + 1} = ${w.toFixed(2)}\n`;
+  }
+  text += `  Total Sum of Weights Σ w_j = ${sumW.toFixed(2)}\n`;
+  text += `  Evaluated Non-Centrality Parameter ϕ = ${state.ncpMM.toFixed(4)}\n`;
+  text += `  Critical Chi-Square Threshold c = ${state.critVal.toFixed(4)} (alpha = 0.05)\n`;
+  text += `  Asymptotic Power π_MM = ${(state.powerMM * 100).toFixed(2)}%\n`;
+
+  el.innerText = text;
+}
+
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
+</script>
+</body>
+</html>

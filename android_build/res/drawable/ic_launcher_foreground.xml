@@ -1,0 +1,45 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Star Tree Graph Edges -->
+    <path
+        android:strokeColor="#34D399"
+        android:strokeWidth="3.5"
+        android:pathData="M38,54 L72,32 M38,54 L72,54 M38,54 L72,76 M72,32 L72,54 M72,54 L72,76" />
+    <!-- Center Reference/Control Node -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M38,54m-10,0a10,10 0,1,1 20,0a10,10 0,1,1 -20,0" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M38,54m-10,0a10,10 0,1,1 20,0a10,10 0,1,1 -20,0" />
+    <!-- Active Treatment Nodes -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M72,32m-8,0a8,8 0,1,1 16,0a8,8 0,1,1 -16,0" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M72,32m-8,0a8,8 0,1,1 16,0a8,8 0,1,1 -16,0" />
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M72,54m-8,0a8,8 0,1,1 16,0a8,8 0,1,1 -16,0" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M72,54m-8,0a8,8 0,1,1 16,0a8,8 0,1,1 -16,0" />
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M72,76m-8,0a8,8 0,1,1 16,0a8,8 0,1,1 -16,0" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M72,76m-8,0a8,8 0,1,1 16,0a8,8 0,1,1 -16,0" />
+    <!-- Small Leaf Sprout on Control Node -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,48 C41,43 45,46 43,49 C41,52 38,51 38,48 Z" />
+</vector>

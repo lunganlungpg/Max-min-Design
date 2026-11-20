@@ -1,0 +1,11 @@
+# Build folders and artifacts
+/android_build/build/
+/jdk-17/
+/tools/
+*.zip
+*.log
+*.idsig
+*.tmp
+__pycache__/
+.Rhistory
+.RData
