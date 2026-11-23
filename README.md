@@ -5,9 +5,9 @@
 
 ### 👨‍🔬 Authorship & Academic Credentials
 - **Research Innovations, Methodology & Software Suite**:  
-  **Lunganlung P. G.**, Agricultural Statistics  
-  *ICAR - Indian Agricultural Statistics Research Institute (ICAR-IASRI)*  
-  Library Avenue, Pusa, New Delhi – 110012, India.
+  **Lunganlung P. G.**  
+  *Division of Agricultural Statistics, The Graduate School,*  
+  *ICAR-Indian Agricultural Research Institute, New Delhi-110012, India.*
 
 - **Foundational Theoretical Research & Base Paper**:  
   **Satya Prakash Singh**<sup>a</sup> and **Ori Davidov**<sup>b</sup> (2026)  
@@ -99,7 +99,7 @@ The figures are computed with the power engine in [maxmin_designs.py](maxmin_des
 
 | Deliverable | File | Description |
 | :--- | :--- | :--- |
-| **Android APK** | [MaxMinDesign.apk](MaxMinDesign.apk) | **Version 1.2.1** — Signed production APK with offline mathematical engine, interactive graph matrix, 2D sensitivity heatmap, field randomizer, adaptive icons, and PDF/CSV export |
+| **Android APK** | [MaxMinDesign.apk](MaxMinDesign.apk) | **Version 1.2.2** — Signed production APK with offline mathematical engine, interactive graph matrix, 2D sensitivity heatmap, field randomizer, adaptive icons, and PDF/CSV export |
 | **R Analysis Script** | [maxmin_designs.R](maxmin_designs.R) | Executable R 4.5.1 / RStudio script reproducing Section 4.2 simulations & Section 4.3 agricultural case study |
 | **Python CLI Tool** | [maxmin_designs.py](maxmin_designs.py) | Standalone Python 3.12 command-line optimizer, simulator, and verification engine |
 | **README Figures** | [make_figures.py](make_figures.py), [figures/](figures/) | Script that draws the three case-study plots above as SVG |
@@ -155,7 +155,7 @@ If you use this software or methodology in your research, please cite both the f
    > Singh, S. P., and Davidov, O. (2026). Max–min experimental designs for comparing pairs of treatments with binary outcomes. *Journal of Statistical Planning and Inference*, 243, 106379. DOI: [10.1016/j.jspi.2025.106379](https://doi.org/10.1016/j.jspi.2025.106379).
 
 2. **Computational Extensions & Software Toolkit**:
-   > Lunganlung P. G. (2026). *MaxMin Design: An Interactive Experimental Optimization and Field Randomization Suite for Pairwise Binary Treatment Comparisons*. Research Suite, ICAR-Indian Agricultural Statistics Research Institute (ICAR-IASRI), New Delhi, India. GitHub: [https://github.com/lunganlungpg/Max-min-Design](https://github.com/lunganlungpg/Max-min-Design).
+   > Lunganlung P. G. (2026). *MaxMin Design: An Interactive Experimental Optimization and Field Randomization Suite for Pairwise Binary Treatment Comparisons*. Research Suite, Division of Agricultural Statistics, The Graduate School, ICAR-Indian Agricultural Research Institute, New Delhi, India. GitHub: [https://github.com/lunganlungpg/Max-min-Design](https://github.com/lunganlungpg/Max-min-Design).
 
 3. **Related Literature**:
    - Dunnett, C. W. (1955). A multiple comparison procedure for comparing several treatments with a control. *JASA*, 50(272), 1096–1121.

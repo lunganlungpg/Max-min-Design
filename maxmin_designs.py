@@ -10,7 +10,7 @@ DOI: 10.1016/j.jspi.2025.106379
 
 RESEARCH INNOVATIONS, METHODOLOGY EXTENSIONS & SOFTWARE IMPLEMENTATION:
 Lunganlung P. G., Agricultural Statistics
-ICAR - Indian Agricultural Statistics Research Institute (ICAR-IASRI), New Delhi 110012, India.
+Division of Agricultural Statistics, The Graduate School, ICAR-Indian Agricultural Research Institute, New Delhi-110012, India.
 - Innovation 1: Agricultural Seedling-Emergence 5-treatment experimental design & data framework
 - Innovation 2: Discrete integer allocation via Hamilton-Hare largest-remainder rounding
 - Innovation 3: Dynamic graph topology matrix solver & automated bipartiteness/connectivity detection
