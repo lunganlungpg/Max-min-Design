@@ -99,7 +99,7 @@ The figures are computed with the power engine in [maxmin_designs.py](maxmin_des
 
 | Deliverable | File | Description |
 | :--- | :--- | :--- |
-| **Android APK** | [MaxMinDesign.apk](MaxMinDesign.apk) | **Version 1.2.0** — Signed production APK with offline mathematical engine, interactive graph matrix, 2D sensitivity heatmap, field randomizer, adaptive icons, and PDF/CSV export |
+| **Android APK** | [MaxMinDesign.apk](MaxMinDesign.apk) | **Version 1.2.1** — Signed production APK with offline mathematical engine, interactive graph matrix, 2D sensitivity heatmap, field randomizer, adaptive icons, and PDF/CSV export |
 | **R Analysis Script** | [maxmin_designs.R](maxmin_designs.R) | Executable R 4.5.1 / RStudio script reproducing Section 4.2 simulations & Section 4.3 agricultural case study |
 | **Python CLI Tool** | [maxmin_designs.py](maxmin_designs.py) | Standalone Python 3.12 command-line optimizer, simulator, and verification engine |
 | **README Figures** | [make_figures.py](make_figures.py), [figures/](figures/) | Script that draws the three case-study plots above as SVG |
