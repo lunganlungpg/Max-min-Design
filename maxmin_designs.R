@@ -8,7 +8,7 @@
 # DOI: 10.1016/j.jspi.2025.106379
 #
 # RESEARCH INNOVATIONS, METHODOLOGY EXTENSIONS & SOFTWARE IMPLEMENTATION:
-# Lunganlung P. G., Agricultural Statistics, Roll No: 13173
+# Lunganlung P. G., Agricultural Statistics
 # ICAR - Indian Agricultural Statistics Research Institute (ICAR-IASRI), New Delhi 110012
 # - Innovation 1: Agricultural Seedling-Emergence 5-treatment experimental design & data framework
 # - Innovation 2: Discrete integer allocation via Hamilton-Hare largest-remainder rounding
