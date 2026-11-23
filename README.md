@@ -5,7 +5,7 @@
 
 ### 👨‍🔬 Authorship & Academic Credentials
 - **Research Innovations, Methodology & Software Suite**:  
-  **Lunganlung P G**, Agricultural Statistics, 
+  **Lunganlung P. G.**, Agricultural Statistics  
   *ICAR - Indian Agricultural Statistics Research Institute (ICAR-IASRI)*  
   Library Avenue, Pusa, New Delhi – 110012, India.
 
@@ -37,9 +37,9 @@ In experimental studies where multiple treatments are evaluated against one anot
 
 ---
 
-## 💡 Research Innovations & Methodological Extensions by Lunganlung P G
+## 💡 Research Innovations & Methodological Extensions by Lunganlung P. G.
 
-To bridge the gap between abstract mathematical derivations and real-world agricultural and laboratory trial execution, **Lunganlung P G** developed six original contributions and extensions integrated into this suite:
+To bridge the gap between abstract mathematical derivations and real-world agricultural and laboratory trial execution, **Lunganlung P. G.** developed six original contributions and extensions integrated into this suite:
 
 ### 1. Agricultural Translation & 5-Treatment Seed-Emergence Experimental Framework
 - **Innovation**: Translated theoretical formulation into an agricultural seed-treatment experiment evaluating 5 distinct groups:
@@ -75,6 +75,26 @@ To bridge the gap between abstract mathematical derivations and real-world agric
 
 ---
 
+## 📊 Results at a Glance: Seed-Emergence Case Study
+
+The trial compares five seed treatments on germination, a yes/no outcome, using the emergence rates observed in Section 4.3. The question is how to split the seeds between treatments so the pairwise comparisons of interest have the most power.
+
+**1. Fewer seeds for the same power.** For 90% power, the max–min design for comparison graph (b) needs 479 seeds. The actual trial allocation needs 693, so graph (b) saves 214 seeds (30.9%).
+
+![Bar chart of seeds needed for 90% power under each design](figures/seeds_for_90_power.svg)
+
+**2. More power from the same seeds.** With the trial's 480 seeds, graph (b) reaches 90% power. Equal group sizes reach only 76%.
+
+![Power against total number of seeds for balanced and max–min designs](figures/power_curves.svg)
+
+**3. Where the seeds go.** The max–min design gives each treatment seeds in proportion to its degree in the comparison graph (Theorem 3.3). Under graph (b), that puts more seeds on the untreated control and bio-priming, the two reference treatments.
+
+![Seeds per treatment under balanced and max–min allocation](figures/allocation_480.svg)
+
+The figures are computed with the power engine in [maxmin_designs.py](maxmin_designs.py) and drawn by [make_figures.py](make_figures.py) (requires `matplotlib`).
+
+---
+
 ## 📦 Project Deliverables
 
 | Deliverable | File | Description |
@@ -82,7 +102,8 @@ To bridge the gap between abstract mathematical derivations and real-world agric
 | **Android APK** | [MaxMinDesign.apk](MaxMinDesign.apk) | **Version 1.2.0** — Signed production APK with offline mathematical engine, interactive graph matrix, 2D sensitivity heatmap, field randomizer, adaptive icons, and PDF/CSV export |
 | **R Analysis Script** | [maxmin_designs.R](maxmin_designs.R) | Executable R 4.5.1 / RStudio script reproducing Section 4.2 simulations & Section 4.3 agricultural case study |
 | **Python CLI Tool** | [maxmin_designs.py](maxmin_designs.py) | Standalone Python 3.12 command-line optimizer, simulator, and verification engine |
-| **Web App / PWA** | [index.html](index.html), [app.js](app.js), [style.css](style.css) | Responsive mobile-friendly scientific web application with Service Worker offline caching |
+| **README Figures** | [make_figures.py](make_figures.py), [figures/](figures/) | Script that draws the three case-study plots above as SVG |
+| **Web App / PWA** | [index.html](index.html), [manifest.json](manifest.json), [sw.js](sw.js) | Responsive mobile-friendly scientific web application with Service Worker offline caching |
 | **Verification Suite** | [verify_apk.py](verify_apk.py) | Automated test suite validating APK integrity and cryptographic signatures |
 | **Build Pipeline** | [build_apk.py](build_apk.py) | Automated Android build toolchain using AAPT2, javac, D8, zipalign & apksigner |
 
@@ -104,16 +125,19 @@ The Android application operates **100% offline**, requiring zero internet conne
 
 ### Run R Script (RStudio / R 4.5.1):
 ```bash
-"C:\Program Files\R\R-4.5.1\bin\Rscript.exe" reproduce_paper.R
+"C:\Program Files\R\R-4.5.1\bin\Rscript.exe" maxmin_designs.R
 ```
 
 ### Run Python Script (Python 3.12):
 ```bash
 # Run Agricultural Seedling Experiment demo
-python reproduce_paper.py --agri
+python maxmin_designs.py --agri
 
 # Optimize custom design: Tree graph, K=5 groups, N=480, delta=0.40
-python reproduce_paper.py --graph tree --k 5 --n 480 --delta 0.40
+python maxmin_designs.py --graph tree --k 5 --n 480 --delta 0.40
+
+# Redraw the README figures (needs matplotlib)
+python make_figures.py
 ```
 
 ### Verify APK Signatures:
@@ -131,7 +155,7 @@ If you use this software or methodology in your research, please cite both the f
    > Singh, S. P., and Davidov, O. (2026). Max–min experimental designs for comparing pairs of treatments with binary outcomes. *Journal of Statistical Planning and Inference*, 243, 106379. DOI: [10.1016/j.jspi.2025.106379](https://doi.org/10.1016/j.jspi.2025.106379).
 
 2. **Computational Extensions & Software Toolkit**:
-   > Lunganlung P G (2026). *MaxMin Design: An Interactive Experimental Optimization and Field Randomization Suite for Pairwise Binary Treatment Comparisons*. Research Suite, ICAR-Indian Agricultural Statistics Research Institute (ICAR-IASRI), New Delhi, India. GitHub: [https://github.com/lunganlungpg/Max-min-Design](https://github.com/lunganlungpg/Max-min-Design).
+   > Lunganlung P. G. (2026). *MaxMin Design: An Interactive Experimental Optimization and Field Randomization Suite for Pairwise Binary Treatment Comparisons*. Research Suite, ICAR-Indian Agricultural Statistics Research Institute (ICAR-IASRI), New Delhi, India. GitHub: [https://github.com/lunganlungpg/Max-min-Design](https://github.com/lunganlungpg/Max-min-Design).
 
 3. **Related Literature**:
    - Dunnett, C. W. (1955). A multiple comparison procedure for comparing several treatments with a control. *JASA*, 50(272), 1096–1121.
