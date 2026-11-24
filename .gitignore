@@ -9,3 +9,10 @@
 __pycache__/
 .Rhistory
 .RData
+
+# Python / R packaging output
+*.egg-info/
+/build/
+/dist/
+*.Rcheck/
+*.tar.gz

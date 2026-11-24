@@ -1,0 +1,39 @@
+# Python packaging for Max-min-Design.
+#
+#   pip install "git+https://github.com/lunganlungpg/Max-min-Design.git"
+#   maxmin-designs --agri            # command-line tool
+#   import maxmin_designs            # library use
+#
+# Only the single module maxmin_designs.py is packaged (pure standard library,
+# no dependencies). The web app, APK build scripts and figures are not included.
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "maxmin-designs"
+version = "1.2.2"
+description = "Max-min optimal experimental designs for pairwise treatment comparisons with binary outcomes"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Lunganlung P. G." }]
+keywords = ["experimental-design", "optimal-design", "power-analysis", "binary-outcomes", "agriculture"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = []   # standard library only
+
+[project.scripts]
+maxmin-designs = "maxmin_designs:main"
+
+[project.urls]
+Homepage = "https://github.com/lunganlungpg/Max-min-Design"
+Paper = "https://doi.org/10.1016/j.jspi.2025.106379"
+
+[tool.setuptools]
+py-modules = ["maxmin_designs"]

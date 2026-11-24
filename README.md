@@ -100,8 +100,10 @@ The figures are computed with the power engine in [maxmin_designs.py](maxmin_des
 | Deliverable | File | Description |
 | :--- | :--- | :--- |
 | **Android APK** | [MaxMinDesign.apk](MaxMinDesign.apk) | **Version 1.2.2** — Signed production APK with offline mathematical engine, interactive graph matrix, 2D sensitivity heatmap, field randomizer, adaptive icons, and PDF/CSV export |
+| **R Package** | [R-package/](R-package/) | `maxmindesign` R package (documented functions + tests), installable with `remotes::install_github` |
 | **R Analysis Script** | [maxmin_designs.R](maxmin_designs.R) | Executable R 4.5.1 / RStudio script reproducing Section 4.2 simulations & Section 4.3 agricultural case study |
-| **Python CLI Tool** | [maxmin_designs.py](maxmin_designs.py) | Standalone Python 3.12 command-line optimizer, simulator, and verification engine |
+| **Python CLI Tool** | [maxmin_designs.py](maxmin_designs.py), [pyproject.toml](pyproject.toml) | Standalone Python 3.12 command-line optimizer, simulator, and verification engine (pip-installable as `maxmin-designs`) |
+| **Docker Image** | [Dockerfile](Dockerfile) | `ghcr.io/lunganlungpg/max-min-design` with both Python and R tools |
 | **README Figures** | [make_figures.py](make_figures.py), [figures/](figures/) | Script that draws the three case-study plots above as SVG |
 | **Web App / PWA** | [index.html](index.html), [manifest.json](manifest.json), [sw.js](sw.js) | Responsive mobile-friendly scientific web application with Service Worker offline caching |
 | **Verification Suite** | [verify_apk.py](verify_apk.py) | Automated test suite validating APK integrity and cryptographic signatures |
@@ -118,6 +120,37 @@ The Android application operates **100% offline**, requiring zero internet conne
 - **Save to Downloads**: Direct integration with Android `MediaStore` to save `.csv` allocation tables and `.txt` trial protocols into the device's public Downloads directory.
 - **Android Share Sheet**: One-tap sharing of experimental protocols directly via WhatsApp, Gmail, SMS, or cloud drives.
 - **Adaptive App Icons**: Supports full Android 8 through Android 15 icon standards (squircle, circle, and rounded rectangle).
+
+---
+
+## 📥 Install as a Package (Python · R · Docker)
+
+Use the design engine without cloning the repository:
+
+| Language | Install | Use |
+| :-- | :-- | :-- |
+| **Python** (≥3.8, no dependencies) | `pip install "git+https://github.com/lunganlungpg/Max-min-Design.git"` | `maxmin-designs --agri` or `import maxmin_designs` |
+| **R** (≥4.0, base R only) | `remotes::install_github("lunganlungpg/Max-min-Design", subdir = "R-package")` | `library(maxmindesign)` |
+| **Docker** (Python + R) | `docker pull ghcr.io/lunganlungpg/max-min-design:latest` | `docker run --rm ghcr.io/lunganlungpg/max-min-design` |
+
+```python
+import maxmin_designs as mm
+xi = [d / 8 for d in (3, 1, 2, 1, 1)]               # design (b): degree-based allocation
+theta = [0.413, 0.510, 0.617, 0.561, 0.604]
+mm.round_largest_remainder(480, xi)                  # integer group sizes
+mm.find_sample_size(xi, theta, target_power=0.90)    # -> 479
+```
+
+```r
+library(maxmindesign)
+xi    <- maxmin_allocation(c(3, 1, 2, 1, 1))
+theta <- c(0.413, 0.510, 0.617, 0.561, 0.604)
+find_sample_size(xi, theta, target_power = 0.90)     # 479
+run_seedling_case_study()                            # Section 4.3 tables
+run_simulation_benchmark()                           # Section 4.2 benchmark
+```
+
+The Docker image is published to [GitHub Packages](https://github.com/lunganlungpg/Max-min-Design/pkgs/container/max-min-design) by [`.github/workflows/publish-packages.yml`](.github/workflows/publish-packages.yml) on every push to `main` and on `vX.Y.Z` tags.
 
 ---
 
@@ -162,3 +195,9 @@ If you use this software or methodology in your research, please cite both the f
    - Hochberg, Y., and Tamhane, A. C. (1987). *Multiple Comparison Procedures*. John Wiley & Sons.
    - Singh, S. P., and Davidov, O. (2019). On the design of experiments with ordered treatments. *JRSS-B*, 85(5), 881–900.
    - Singh, A., Singh, S. P., and Davidov, O. (2025). Optimal designs for testing pairwise differences: A graph-based game theoretic approach. *Scandinavian Journal of Statistics*, 52(2), 533–571.
+
+---
+
+## 📄 License
+
+The software (Python module, R package, web app) is released under the [MIT License](LICENSE.md). Please cite Singh & Davidov (2026) for the underlying theory.

@@ -1,0 +1,8 @@
+# Only the Python module, the R package and metadata go into the image.
+*
+!maxmin_designs.py
+!maxmin_designs.R
+!pyproject.toml
+!README.md
+!LICENSE.md
+!R-package/

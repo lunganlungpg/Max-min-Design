@@ -16,13 +16,32 @@ Division of Agricultural Statistics, The Graduate School, ICAR-Indian Agricultur
 - Innovation 3: Dynamic graph topology matrix solver & automated bipartiteness/connectivity detection
 - Innovation 4: 2D multi-parametric power sensitivity & robustness analysis engine
 - Innovation 5: Field plot & laboratory nursery tray randomization generator (Fisher-Yates)
+
+USAGE
+    pip install "git+https://github.com/lunganlungpg/Max-min-Design.git"
+    maxmin-designs --agri                                   # Section 4.3 case study
+    maxmin-designs --graph tree --k 5 --n 480 --delta 0.40  # custom design
+
+    import maxmin_designs as mm
+    mm.find_sample_size(xi=[0.5, 0.125, 0.125, 0.125, 0.125], theta=[0.3, 0.7, 0.7, 0.7, 0.7])
+
+The module uses only the Python standard library (no numpy/scipy needed): the
+chi-square and non-central chi-square distributions are implemented below.
 """
 
 import sys
 import math
 import argparse
 
+__version__ = "1.2.2"
+
+
 def round_largest_remainder(N, xi):
+    """Turn allocation proportions ``xi`` into integer group sizes summing to ``N``.
+
+    Hamilton / largest-remainder method: floor every ``N * xi[i]`` and give the
+    leftover units to the groups with the largest fractional parts.
+    """
     K = len(xi)
     raw = [N * x for x in xi]
     integers = [int(math.floor(r)) for r in raw]
@@ -35,6 +54,11 @@ def round_largest_remainder(N, xi):
     return integers
 
 def calc_ncp(n, theta):
+    """Non-centrality parameter of the Wald test (Equation 9, Singh & Davidov 2026).
+
+    ``n`` are group sizes and ``theta`` the success probabilities; the last
+    group is the reference. Weights are inverse Bernoulli variances.
+    """
     K = len(n)
     w = [n[j] / (theta[j] * (1.0 - theta[j])) for j in range(K)]
     thK = theta[-1]
@@ -44,6 +68,7 @@ def calc_ncp(n, theta):
     return max(0.0, term1 - (term2**2) / sum_w)
 
 def log_gamma(x):
+    """log Gamma(x) via the Lanczos approximation (reflection formula for x < 0.5)."""
     p = [
         676.5203681218851, -1259.1392167224028,
         771.32342877765313, -176.61502916214059,
@@ -60,6 +85,10 @@ def log_gamma(x):
     return 0.5 * math.log(2.0 * math.pi) + (x + 0.5) * math.log(t) - t + math.log(a)
 
 def gamma_inc_lower(s, x):
+    """Regularised lower incomplete gamma P(s, x).
+
+    Series expansion for x < s + 1, continued fraction (Lentz) otherwise.
+    """
     if x <= 0:
         return 0.0
     if x < s + 1.0:
@@ -94,11 +123,16 @@ def gamma_inc_lower(s, x):
         return 1.0 - q
 
 def chi2_cdf(x, df):
+    """CDF of the central chi-square distribution with ``df`` degrees of freedom."""
     if x <= 0:
         return 0.0
     return gamma_inc_lower(df / 2.0, x / 2.0)
 
 def chi2_inv(p, df):
+    """Quantile of the chi-square distribution.
+
+    Wilson-Hilferty starting value refined with Newton-Raphson iterations.
+    """
     v = df
     h = 2.0 / (9.0 * v)
     t = math.sqrt(-2.0 * math.log(1.0 - p)) if p >= 0.5 else math.sqrt(-2.0 * math.log(p))
@@ -121,6 +155,11 @@ def chi2_inv(p, df):
     return x
 
 def ncx2_cdf(x, df, phi):
+    """CDF of the non-central chi-square distribution (non-centrality ``phi``).
+
+    Evaluated as a Poisson(phi/2) mixture of central chi-squares; for large
+    phi the sum starts at the Poisson mode and walks outwards for stability.
+    """
     if x <= 0:
         return 0.0
     if phi < 1e-8:
@@ -155,10 +194,15 @@ def ncx2_cdf(x, df, phi):
     return min(1.0, max(0.0, sum_val))
 
 def calc_power(phi, df, alpha=0.05):
+    """Power of the level-``alpha`` chi-square test with non-centrality ``phi``."""
     c = chi2_inv(1.0 - alpha, df)
     return 1.0 - ncx2_cdf(c, df, phi)
 
 def find_sample_size(xi, theta, target_power=0.90, alpha=0.05, max_N=2000):
+    """Smallest total N whose rounded allocation reaches ``target_power``.
+
+    Returns ``None`` if the target is not reached by ``max_N``.
+    """
     K = len(xi)
     df = K - 1
     c = chi2_inv(1.0 - alpha, df)
@@ -171,6 +215,7 @@ def find_sample_size(xi, theta, target_power=0.90, alpha=0.05, max_N=2000):
     return None
 
 def run_agri_demo():
+    """Reproduce the seedling-emergence case study (Section 4.3, Tables 3-4)."""
     print("="*65)
     print("AGRICULTURAL SEEDLING-EMERGENCE EXPERIMENT (SECTION 4.3)")
     print("="*65)
@@ -210,6 +255,11 @@ def run_agri_demo():
     print("-" * 76)
 
 def main():
+    """Command-line interface (installed as ``maxmin-designs``)."""
+    # The tables contain non-ASCII symbols (e.g. ★); force UTF-8 so redirected
+    # output on Windows (cp1252 consoles/pipes) does not raise UnicodeEncodeError.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description="Max-Min Experimental Design Calculator (Singh & Davidov, 2026)")
     parser.add_argument("--agri", action="store_true", help="Run Section 4.3 Agricultural Experiment Demonstration")
     parser.add_argument("--k", type=int, default=5, help="Number of treatments (default: 5)")

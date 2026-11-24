@@ -1,0 +1,25 @@
+Package: maxmindesign
+Title: Max-Min Experimental Designs for Pairwise Treatment Comparisons with Binary Outcomes
+Version: 1.2.2
+Authors@R: c(
+    person("Lunganlung", "P. G.", role = c("aut", "cre"),
+           email = "lunganlungpg@gmail.com"))
+Description: Power and sample-size tools for max-min optimal allocations when
+    pairs of treatments with binary (success/failure) outcomes are compared,
+    following Singh and Davidov (2026) <doi:10.1016/j.jspi.2025.106379>.
+    Provides the Wald-test non-centrality parameter, chi-square power,
+    largest-remainder integer allocation, degree-based max-min allocations for
+    bipartite comparison graphs, minimum sample-size search, and replications
+    of the paper's seedling-emergence case study and simulation benchmark.
+License: MIT + file LICENSE
+URL: https://github.com/lunganlungpg/Max-min-Design
+BugReports: https://github.com/lunganlungpg/Max-min-Design/issues
+Encoding: UTF-8
+Depends: R (>= 4.0.0)
+Imports:
+    stats
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.0
